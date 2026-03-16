@@ -23,10 +23,10 @@ Citizen Input
 
 ## Flow Diagram
 
-1. Citizen Participation Layer
-- Tally / form submission
-- Consent verification
-- Input normalization
+  1. Citizen Participation Layer
+    - Tally / form submission
+    - Consent verification
+    - Input normalization
 
 2. Civic Structuring Layer
 - Build civic profile
