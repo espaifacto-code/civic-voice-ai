@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,6 +18,7 @@ const App = () => (
       <BrowserRouter basename="/civic-voice-ai">
         <Navbar />
         <Routes>
+    <Route path="/" element={<Navigate to="/dashboard" />} />
     <Route path="/dashboard" element={<Dashboard />} />
     <Route path="/proposals" element={<Explorer />} />
     <Route path="*" element={<NotFound />} />
