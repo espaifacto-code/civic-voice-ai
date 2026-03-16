@@ -20,7 +20,7 @@ const App = () => (
         <Routes>
     <Route path="/" element={<Navigate to="/dashboard" />} />
     <Route path="/dashboard" element={<Dashboard />} />
-    <Route path="/explorer" element={<Explorer />} />
+    <Route path="/explorer" element={<ProposalExplorer />} />
     <Route path="*" element={<NotFound />} />
   </Routes>
       </BrowserRouter>
