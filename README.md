@@ -21,6 +21,8 @@ Citizen Input
 → Citizen Explanation
 → Civic Dashboard
 
+n8n flow ---> https://github.com/espaifacto-code/civic-voice-ai/blob/main/common-praxis-civic-ai-n8n-workflow.json
+
 ## Flow Diagram
 
   1. Citizen Participation Layer
