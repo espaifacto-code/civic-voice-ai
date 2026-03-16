@@ -410,3 +410,39 @@ One stronger Mozilla-specific angle:
 | This MVP demonstrates how AI can expand democratic capacity without collapsing plurality, accountability, or public legibility. Instead of automating decisions, it structures participation, surfaces multiple policy options, checks them for governance risks, and explains them in a way communities can inspect. |
 |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
+
+
+
+FLOWCHART OF n8n
+<img width="2893" height="3940" alt="MVP_Flowchart" src="https://github.com/user-attachments/assets/34cfe0bc-a988-432b-b6ce-a2b310fb115e" />
+
+1. Citizen Participation Layer
+- Tally / form submission
+- Consent verification
+- Input normalization
+
+2. Civic Structuring Layer
+- Build civic profile
+- Extract issue, values, affected groups, priorities
+
+3. Knowledge Grounding Layer
+- Build retrieval query
+- Search policy / planning documents in Supabase
+- Merge retrieved context
+
+4. Proposal Generation Layer
+- Generate solution categories
+- Generate 3 structured civic proposals
+
+5. Governance Layer
+- Ethical review
+- Approval / revision gate
+
+6. Evaluation Layer
+- Impact scoring
+- Feasibility, inclusivity, sustainability, community support
+
+7. Transparency Layer
+- Plain-language civic explanation
+- Dashboard record
+- Public dashboard / proposal explorer
