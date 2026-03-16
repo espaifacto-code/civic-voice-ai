@@ -76,7 +76,9 @@ n8n flow ---> https://github.com/espaifacto-code/civic-voice-ai/blob/main/common
 - **AI:** OpenAI GPT models with retrieval-augmented generation
 - **Database:** Supabase (vector storage + PostgreSQL)
 - **Deployment:** GitHub Pages
+## License
 
+This project is licensed under the **MIT License**. See [LICENSE](./LICENSE) for details.
 ## Access Points
 
 ### For Citizens
