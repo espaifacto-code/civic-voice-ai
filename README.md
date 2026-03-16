@@ -26,7 +26,7 @@ Impact Scoring → Civic Explanation → Dashboard Record → Supabase → Publi
 
 ## Architecture Overview
 
-n8n flow ---> https://github.com/espaifacto-code/civic-voice-ai/blob/main/common-praxis-civic-ai-n8n-workflow.json
+n8n flow ---> https://github.com/espaifacto-code/civic-voice-ai/blob/main/n8n/participatory-civic-ai-mvp-n8n-workflow.json
 
 ### 1. Participation Layer
 **Purpose:** Capture and validate citizen input with consent awareness
