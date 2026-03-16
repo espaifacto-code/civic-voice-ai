@@ -18,10 +18,10 @@ const App = () => (
       <BrowserRouter basename="/civic-voice-ai">
         <Navbar />
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/explorer" element={<Explorer />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+    <Route path="/dashboard" element={<Dashboard />} />
+    <Route path="/proposals" element={<Explorer />} />
+    <Route path="*" element={<NotFound />} />
+  </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
