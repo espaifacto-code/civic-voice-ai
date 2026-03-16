@@ -25,7 +25,7 @@ const Index = () => {
               </Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
-              <a href="https://tally.so/r/mD5N8Q" target="_blank" rel="noopener noreferrer">
+              <a href="https://tally.so/r/Y5OA8q" target="_blank" rel="noopener noreferrer">
                 <Users className="mr-2 h-4 w-4" />
                 Submit Citizen Input
               </a>
@@ -70,7 +70,7 @@ const Index = () => {
                     and generates proposals that appear in the dashboard.
                   </p>
                   <Button variant="outline" size="sm" asChild>
-                    <a href="https://tally.so/r/mD5N8Q" target="_blank" rel="noopener noreferrer">
+                    <a href="https://tally.so/r/Y5OA8q" target="_blank" rel="noopener noreferrer">
                       Open Tally Form
                       <ArrowRight className="ml-2 h-3 w-3" />
                     </a>
