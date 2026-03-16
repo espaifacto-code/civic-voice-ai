@@ -54,21 +54,31 @@ export default function ManualTrigger({ onTrigger }: ManualTriggerProps) {
         throw new Error('n8n webhook URL not configured. Please set VITE_N8N_WEBHOOK_URL in your .env file.');
       }
 
+      const responses = [
+        { question: "What should we call you?", answer: "Dashboard User" },
+        { question: "Email (optional)", answer: "" },
+        { question: "Which neighborhood or area are you talking about?", answer: formData.location },
+        { question: "What is your connection to this area?", answer: "Local resident" },
+        { question: "How often are you in this area?", answer: "Daily" },
+        { question: "What is the main issue or challenge in this neighborhood or public space?", answer: formData.description },
+        { question: "Who is most affected by this issue?", answer: formData.affected_groups ? formData.affected_groups.split(',').map(s => s.trim()) : [] },
+        { question: "How serious is this issue for you?", answer: 8 },
+        { question: "What do you think is causing this issue?", answer: formData.issue || "urban development pressures" },
+        { question: "Which values should be prioritized most in this area?", answer: formData.priorities ? formData.priorities.split(',').map(s => s.trim()) : ["sustainability", "community"] },
+        { question: "What would a fair solution look like here?", answer: "Inclusive and sustainable" },
+        { question: "What resources, strengths, or community assets already exist here?", answer: formData.community_assets },
+        { question: "What should definitely not happen in any future solution?", answer: formData.ethical_redlines },
+        { question: "What kinds of solutions would you like to see? Choose all that apply.", answer: formData.desired_solution_types ? formData.desired_solution_types.split(',').map(s => s.trim()) : [] },
+      ];
+
       const payload = {
-        // Format data to match n8n workflow expectations
-        issue_main: formData.description,
-        area: formData.location,
-        affected_groups: formData.affected_groups ? formData.affected_groups.split(',').map(s => s.trim()) : [],
-        priority_values: formData.priorities ? formData.priorities.split(',').map(s => s.trim()) : [],
-        community_assets: formData.community_assets,
-        issue_red_lines: formData.ethical_redlines,
-        solution_types: formData.desired_solution_types ? formData.desired_solution_types.split(',').map(s => s.trim()) : [],
-        consent_given: formData.consent_given,
-        // Add metadata
+        data: {
+          responses,
+          consent_given: formData.consent_given,
+        },
         source: 'dashboard_manual_trigger',
-        timestamp: new Date().toISOString(),
-        participant_name: 'Dashboard User',
         project_id: `manual-${Date.now()}`,
+        pilot_topic: formData.issue || "civic participation",
       };
 
       const response = await fetch(webhookUrl, {
