@@ -1,0 +1,237 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { Play, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+interface ManualTriggerProps {
+  onTrigger?: (data: any) => void;
+}
+
+export default function ManualTrigger({ onTrigger }: ManualTriggerProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [formData, setFormData] = useState({
+    issue: '',
+    location: '',
+    description: '',
+    affected_groups: '',
+    priorities: '',
+    community_assets: '',
+    ethical_redlines: '',
+    desired_solution_types: '',
+    consent_given: false,
+  });
+
+  const { toast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.consent_given) {
+      toast({
+        title: "Consent Required",
+        description: "Please provide consent before submitting.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    setStatus('idle');
+
+    try {
+      // Simulate API call to n8n webhook
+      const response = await fetch('/api/trigger-workflow', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          timestamp: new Date().toISOString(),
+          source: 'manual_trigger',
+        }),
+      });
+
+      if (response.ok) {
+        setStatus('success');
+        toast({
+          title: "Workflow Triggered",
+          description: "The civic AI pipeline has been started with your input.",
+        });
+        onTrigger?.(formData);
+      } else {
+        throw new Error('Failed to trigger workflow');
+      }
+    } catch (error) {
+      setStatus('error');
+      toast({
+        title: "Trigger Failed",
+        description: "Failed to start the workflow. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleInputChange = (field: string, value: string | boolean) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Play className="h-5 w-5" />
+          Manual Workflow Trigger
+        </CardTitle>
+        <CardDescription>
+          Test the civic AI pipeline by manually submitting citizen input data
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="issue">Issue Category</Label>
+              <Select value={formData.issue} onValueChange={(value) => handleInputChange('issue', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select issue type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="housing">Housing</SelectItem>
+                  <SelectItem value="transportation">Transportation</SelectItem>
+                  <SelectItem value="environment">Environment</SelectItem>
+                  <SelectItem value="education">Education</SelectItem>
+                  <SelectItem value="healthcare">Healthcare</SelectItem>
+                  <SelectItem value="community">Community Safety</SelectItem>
+                  <SelectItem value="economy">Local Economy</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="location">Location</Label>
+              <Input
+                id="location"
+                placeholder="e.g., Barcelona, Gràcia district"
+                value={formData.location}
+                onChange={(e) => handleInputChange('location', e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">Issue Description</Label>
+            <Textarea
+              id="description"
+              placeholder="Describe the civic issue or challenge..."
+              value={formData.description}
+              onChange={(e) => handleInputChange('description', e.target.value)}
+              rows={3}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="affected_groups">Affected Groups</Label>
+              <Input
+                id="affected_groups"
+                placeholder="e.g., elderly, families, youth"
+                value={formData.affected_groups}
+                onChange={(e) => handleInputChange('affected_groups', e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="priorities">Community Priorities</Label>
+              <Input
+                id="priorities"
+                placeholder="e.g., affordability, accessibility, sustainability"
+                value={formData.priorities}
+                onChange={(e) => handleInputChange('priorities', e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="community_assets">Community Assets & Resources</Label>
+            <Textarea
+              id="community_assets"
+              placeholder="Existing community resources, organizations, or infrastructure..."
+              value={formData.community_assets}
+              onChange={(e) => handleInputChange('community_assets', e.target.value)}
+              rows={2}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="ethical_redlines">Ethical Red Lines</Label>
+            <Textarea
+              id="ethical_redlines"
+              placeholder="What should NOT be considered in solutions?"
+              value={formData.ethical_redlines}
+              onChange={(e) => handleInputChange('ethical_redlines', e.target.value)}
+              rows={2}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="desired_solution_types">Desired Solution Types</Label>
+            <Input
+              id="desired_solution_types"
+              placeholder="e.g., policy, community programs, infrastructure"
+              value={formData.desired_solution_types}
+              onChange={(e) => handleInputChange('desired_solution_types', e.target.value)}
+            />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="consent"
+              checked={formData.consent_given}
+              onCheckedChange={(checked) => handleInputChange('consent_given', checked as boolean)}
+            />
+            <Label htmlFor="consent" className="text-sm">
+              I consent to processing this information through the civic AI pipeline for public benefit.
+            </Label>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Button type="submit" disabled={isLoading} className="flex items-center gap-2">
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Play className="h-4 w-4" />
+              )}
+              {isLoading ? 'Triggering...' : 'Trigger Workflow'}
+            </Button>
+
+            {status === 'success' && (
+              <Badge variant="default" className="flex items-center gap-1">
+                <CheckCircle className="h-3 w-3" />
+                Triggered Successfully
+              </Badge>
+            )}
+
+            {status === 'error' && (
+              <Badge variant="destructive" className="flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />
+                Trigger Failed
+              </Badge>
+            )}
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
