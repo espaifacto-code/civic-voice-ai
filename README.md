@@ -1,4 +1,4 @@
-# Civic AI Proposal Engine
+# Civic AI Proposal Engine MVP
 
 AI-assisted participatory governance prototype.
 
