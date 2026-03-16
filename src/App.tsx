@@ -12,6 +12,9 @@ import Index from "@/pages/Index";
 import NotFound from "./pages/NotFound";
 import { Skeleton } from "@/components/ui/skeleton";
 
+// Lazy load the Transparency page for better performance
+const Transparency = lazy(() => import("@/pages/Transparency"));
+
 // Loading component for lazy-loaded pages
 const PageSkeleton = () => (
   <main className="min-h-screen bg-background">
@@ -39,7 +42,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <BrowserRouter basename="/">
         <Navbar />
         <Routes>
           <Route path="/" element={<Index />} />
