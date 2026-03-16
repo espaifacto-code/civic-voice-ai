@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Navbar from "@/components/layout/Navbar";
 import Dashboard from "@/pages/Dashboard";
 import Explorer from "@/pages/Explorer";
+import Index from "@/pages/Index";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -18,7 +19,7 @@ const App = () => (
       <BrowserRouter basename="/civic-voice-ai">
         <Navbar />
         <Routes>
-    <Route path="/" element={<Navigate to="/dashboard" />} />
+    <Route path="/" element={<Index />} />
     <Route path="/dashboard" element={<Dashboard />} />
     <Route path="/explorer" element={<Explorer />} />
     <Route path="*" element={<NotFound />} />

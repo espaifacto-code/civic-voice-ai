@@ -61,7 +61,7 @@ export default function Dashboard() {
     <div className="container space-y-8 py-8">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Participatory Civic AI Dashboard</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Transforming citizen voices into actionable, ethical policy.</p>
+        <p className="mt-1 text-sm text-muted-foreground">AI-assisted civic participation platform<br />transforming citizen input into actionable policy proposals</p>
       </div>
 
       {/* Metrics */}
