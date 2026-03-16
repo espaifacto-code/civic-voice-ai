@@ -1,4 +1,5 @@
 import { ArrowDown, ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const lanes = [
   {
@@ -47,10 +48,123 @@ const badges = [
   { label: "Publicly explainable", color: "bg-emerald-100 text-emerald-700 border-emerald-200" },
 ];
 
+const nodeTooltips: Record<
+  string,
+  {
+    title: string;
+    description: string;
+    badge: string;
+  }
+> = {
+  "Citizen Input": {
+    title: "Citizen Input",
+    description:
+      "Captures raw citizen or workshop responses about a local issue. Input comes from form fields, workshop notes, or survey responses; output is unstructured civic input.",
+    badge: "Democratic entry point",
+  },
+  "Consent Verification": {
+    title: "Consent Verification",
+    description:
+      "Checks whether the participant has agreed to AI-assisted processing of their input. Input is the consent field from the submission form; output is approval to continue or stop the workflow.",
+    badge: "Protects participants before AI processing begins",
+  },
+  "Data Normalization": {
+    title: "Data Normalization",
+    description:
+      "Converts raw form answers into consistent structured fields. Input includes mixed survey answers, labels, and text responses; output is clean civic variables (issue, area, values, affected groups, desired solutions).",
+    badge: "Makes input machine-readable without losing civic meaning",
+  },
+  "Civic Profile": {
+    title: "Civic Profile",
+    description:
+      "Builds a structured profile of the civic situation described by the participant. Input is normalized citizen data; output is a civic profile with issue, priorities, ethical principles, and lived context.",
+    badge: "Turns fragmented responses into a coherent public problem",
+  },
+  "Build Query": {
+    title: "Build Query",
+    description:
+      "Converts the civic profile into a retrieval query for technical and policy documents. Input is issue, area, values, and community priorities; output is a structured search query.",
+    badge: "Connects citizen concerns to institutional knowledge",
+  },
+  "Retrieve Policy Context": {
+    title: "Retrieve Policy Context",
+    description:
+      "Searches the knowledge base for planning, accessibility, sustainability, and governance documents related to the issue. Input is the retrieval query; output is relevant technical and policy references.",
+    badge: "Grounds proposals in real planning knowledge",
+  },
+  "Citizen + Policy Context": {
+    title: "Citizen + Policy Context",
+    description:
+      "Merges citizen priorities with retrieved planning and policy knowledge. Input is the civic profile and retrieved context; output is a grounded context package for proposal generation.",
+    badge: "Where participatory knowledge and formal knowledge meet",
+  },
+  "Generate Solution Types": {
+    title: "Generate Solution Types",
+    description:
+      "Produces a diverse set of solution categories before generating final proposals. Input is the civic issue and context; output includes categories like policy, community initiative, infrastructure, and education.",
+    badge: "Preserves plurality in possible interventions",
+  },
+  "Generate Civic Proposals": {
+    title: "Generate Civic Proposals",
+    description:
+      "Creates concrete civic proposals based on citizen input and grounded policy context. Input includes civic profile, retrieved context, and solution categories; output is structured proposals with title, steps, stakeholders, and expected impact.",
+    badge: "Translates public concerns into actionable options",
+  },
+  "Ethical Review": {
+    title: "Ethical Review",
+    description:
+      "Evaluates generated proposals for exclusion, bias, accessibility gaps, weak sustainability, and unrealistic implementation. Input is the proposal package and citizen priorities; output is an ethical issues list plus an approval recommendation.",
+    badge: "Adds oversight before publication",
+  },
+  "Approval Gate": {
+    title: "Approval Gate",
+    description:
+      "Decides whether proposals proceed or must be revised. Input is the ethical review result; output is an approved package or a revision path.",
+    badge: "Introduces procedural accountability",
+  },
+  "Revision Loop": {
+    title: "Revision Loop",
+    description:
+      "Sends problematic proposals back for revision using reviewer feedback. Input is ethical issues and the rejected proposal package; output is improved proposals for another review cycle.",
+    badge: "Makes the system iterative and safer",
+  },
+  "Impact Scoring": {
+    title: "Impact Scoring",
+    description:
+      "Scores proposals across dimensions such as feasibility, inclusivity, sustainability, and community support. Input is approved proposals; output is structured impact scores and evaluation summaries.",
+    badge: "Surfaces public value through comparison",
+  },
+  "Civic Explanation": {
+    title: "Civic Explanation",
+    description:
+      "Translates the proposal and review results into plain language. Input is proposals, ethical review, and impact scores; output is a citizen-readable explanation.",
+    badge: "Makes AI outputs understandable to citizens",
+  },
+  "Dashboard Record": {
+    title: "Dashboard Record",
+    description:
+      "Packages all outputs into a structured civic record for storage and visualization. Input is proposals, review, explanation, and scores; output is a final record object.",
+    badge: "Creates traceability for public transparency",
+  },
+  Supabase: {
+    title: "Supabase",
+    description:
+      "Stores civic records in a structured database. Input is the final dashboard record; output is persistent public-interest data.",
+    badge: "Enables accountability and reuse over time",
+  },
+  "Public Transparency Dashboard": {
+    title: "Public Transparency Dashboard",
+    description:
+      "Displays submissions, proposals, ethical status, and impact results to the public or stakeholders. Input is stored civic records; output is an accessible civic intelligence interface.",
+    badge: "Turns the workflow into a transparency tool",
+  },
+};
+
 export default function ProcessDiagram() {
   return (
     <main className="min-h-screen bg-background">
-      <div className="container py-10">
+      <TooltipProvider>
+        <div className="container py-10">
         {/* Header */}
         <div className="mb-10 text-center">
           <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -102,40 +216,61 @@ export default function ProcessDiagram() {
                   }`}
                 >
                   {lane.steps.map((step, stepIdx) => {
+                    const tooltip = nodeTooltips[step];
                     const isApprovalGate =
                       lane.label === "Governance" && step === "Approval Gate";
                     const isRevisionLoop =
                       lane.label === "Governance" && step === "Revision Loop";
 
+                    const stepCard = (
+                      <div
+                        className={`relative flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 shadow-sm transition-shadow hover:shadow-md ${
+                          isRevisionLoop ? "ring-2 ring-orange-300" : ""
+                        }`}
+                      >
+                        <div className={`h-2 w-2 rounded-full ${lane.dotColor} shrink-0`} />
+                        <span className="text-sm font-medium text-foreground whitespace-nowrap">
+                          {step}
+                        </span>
+
+                        {/* Approval gate indicator */}
+                        {isApprovalGate && (
+                          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-orange-500 text-[10px]">
+                            <ArrowDown className="h-3 w-3" />
+                            <span className="font-semibold">if issues</span>
+                          </div>
+                        )}
+
+                        {/* Revision loop hint */}
+                        {isRevisionLoop && (
+                          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-1 text-orange-500 text-[10px]">
+                            <ArrowLeft className="h-3 w-3" />
+                            <span className="font-semibold">back to proposal review</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+
                     return (
                       <div key={step} className="flex items-center gap-2">
-                        {/* Step Card */}
-                        <div
-                          className={`relative flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 shadow-sm transition-shadow hover:shadow-md ${
-                            isRevisionLoop ? "ring-2 ring-orange-300" : ""
-                          }`}
-                        >
-                          <div className={`h-2 w-2 rounded-full ${lane.dotColor} shrink-0`} />
-                          <span className="text-sm font-medium text-foreground whitespace-nowrap">
-                            {step}
-                          </span>
-
-                          {/* Approval gate indicator */}
-                          {isApprovalGate && (
-                            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-orange-500 text-[10px]">
-                              <ArrowDown className="h-3 w-3" />
-                              <span className="font-semibold">if issues</span>
-                            </div>
-                          )}
-
-                          {/* Revision loop hint */}
-                          {isRevisionLoop && (
-                            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-1 text-orange-500 text-[10px]">
-                              <ArrowLeft className="h-3 w-3" />
-                              <span className="font-semibold">back to proposal review</span>
-                            </div>
-                          )}
-                        </div>
+                        {tooltip ? (
+                          <Tooltip>
+                            <TooltipTrigger asChild>{stepCard}</TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <div className="flex flex-col gap-1">
+                                <p className="text-sm font-semibold">{tooltip.title}</p>
+                                <p className="text-xs leading-snug text-muted-foreground">
+                                  {tooltip.description}
+                                </p>
+                                <div className="mt-2 inline-flex items-center rounded-full bg-muted px-2.5 py-1 text-[10px] font-semibold text-foreground">
+                                  {tooltip.badge}
+                                </div>
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          stepCard
+                        )}
 
                         {/* Arrow between steps (not after last in lane) */}
                         {stepIdx < lane.steps.length - 1 && (
@@ -192,7 +327,8 @@ export default function ProcessDiagram() {
             Citizen input → grounded proposals → ethical oversight → public transparency
           </p>
         </div>
-      </div>
+        </div>
+      </TooltipProvider>
     </main>
   );
 }
