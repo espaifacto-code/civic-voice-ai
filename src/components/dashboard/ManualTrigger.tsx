@@ -47,34 +47,56 @@ export default function ManualTrigger({ onTrigger }: ManualTriggerProps) {
     setStatus('idle');
 
     try {
-      // Simulate API call to n8n webhook
-      const response = await fetch('/api/trigger-workflow', {
+      // Call n8n webhook directly
+      const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL;
+
+      if (!webhookUrl || webhookUrl.includes('your-n8n-instance.com')) {
+        throw new Error('n8n webhook URL not configured. Please set VITE_N8N_WEBHOOK_URL in your .env file.');
+      }
+
+      const payload = {
+        // Format data to match n8n workflow expectations
+        issue_main: formData.description,
+        area: formData.location,
+        affected_groups: formData.affected_groups ? formData.affected_groups.split(',').map(s => s.trim()) : [],
+        priority_values: formData.priorities ? formData.priorities.split(',').map(s => s.trim()) : [],
+        community_assets: formData.community_assets,
+        issue_red_lines: formData.ethical_redlines,
+        solution_types: formData.desired_solution_types ? formData.desired_solution_types.split(',').map(s => s.trim()) : [],
+        consent_given: formData.consent_given,
+        // Add metadata
+        source: 'dashboard_manual_trigger',
+        timestamp: new Date().toISOString(),
+        participant_name: 'Dashboard User',
+        project_id: `manual-${Date.now()}`,
+      };
+
+      const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          timestamp: new Date().toISOString(),
-          source: 'manual_trigger',
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
+        const result = await response.json();
         setStatus('success');
         toast({
           title: "Workflow Triggered",
-          description: "The civic AI pipeline has been started with your input.",
+          description: "The civic AI pipeline has been started. Check the dashboard for results.",
         });
-        onTrigger?.(formData);
+        onTrigger?.({ ...formData, result });
       } else {
-        throw new Error('Failed to trigger workflow');
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
     } catch (error) {
+      console.error('Webhook trigger error:', error);
       setStatus('error');
       toast({
         title: "Trigger Failed",
-        description: "Failed to start the workflow. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to start the workflow. Please check your webhook URL.",
         variant: "destructive",
       });
     } finally {
@@ -94,7 +116,8 @@ export default function ManualTrigger({ onTrigger }: ManualTriggerProps) {
           Manual Workflow Trigger
         </CardTitle>
         <CardDescription>
-          Test the civic AI pipeline by manually submitting citizen input data
+          Test the civic AI pipeline by manually submitting citizen input data.
+          Make sure to configure VITE_N8N_WEBHOOK_URL in your .env file.
         </CardDescription>
       </CardHeader>
       <CardContent>
