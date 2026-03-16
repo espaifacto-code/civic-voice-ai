@@ -4,7 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  base: "/YOUR_REPO_NAME/",
+  base: "/civic-voice-ai/",
 
   server: {
     host: "::",
