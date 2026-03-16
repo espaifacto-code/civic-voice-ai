@@ -14,7 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      civic_records: {
+        Row: {
+          approved: boolean | null
+          area: string | null
+          avg_feasibility: number | null
+          avg_inclusivity: number | null
+          avg_social_impact: number | null
+          avg_sustainability: number | null
+          created_at: string
+          ethical_issues: Json | null
+          ethical_issues_count: number | null
+          id: string
+          issue: string | null
+          participant: string | null
+          proposal_count: number | null
+          proposals: Json | null
+          scores: Json | null
+          status: string | null
+        }
+        Insert: {
+          approved?: boolean | null
+          area?: string | null
+          avg_feasibility?: number | null
+          avg_inclusivity?: number | null
+          avg_social_impact?: number | null
+          avg_sustainability?: number | null
+          created_at?: string
+          ethical_issues?: Json | null
+          ethical_issues_count?: number | null
+          id?: string
+          issue?: string | null
+          participant?: string | null
+          proposal_count?: number | null
+          proposals?: Json | null
+          scores?: Json | null
+          status?: string | null
+        }
+        Update: {
+          approved?: boolean | null
+          area?: string | null
+          avg_feasibility?: number | null
+          avg_inclusivity?: number | null
+          avg_social_impact?: number | null
+          avg_sustainability?: number | null
+          created_at?: string
+          ethical_issues?: Json | null
+          ethical_issues_count?: number | null
+          id?: string
+          issue?: string | null
+          participant?: string | null
+          proposal_count?: number | null
+          proposals?: Json | null
+          scores?: Json | null
+          status?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
