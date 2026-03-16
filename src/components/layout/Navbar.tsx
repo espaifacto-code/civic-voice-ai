@@ -1,9 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
-import { BarChart3, FileSearch } from "lucide-react";
+import { BarChart3, FileSearch, GitBranchPlus } from "lucide-react";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: BarChart3 },
   { to: "/explorer", label: "Proposal Explorer", icon: FileSearch },
+  { to: "/process", label: "Process Flow", icon: GitBranchPlus },
 ];
 
 export default function Navbar() {
