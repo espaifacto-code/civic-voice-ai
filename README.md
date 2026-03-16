@@ -10,6 +10,19 @@ This system takes raw citizen feedback from surveys, workshops, or forms and tra
 - **Impact evaluation** across equity, sustainability, and feasibility
 - **Public transparency** through accessible dashboards and explanations
 
+## Model Portability & Open Architecture
+
+The MVP currently uses OpenAI-hosted models for speed of prototyping, but the architecture is **model-agnostic**. The proposal generation, ethical review, explanation, and scoring stages can be swapped to open-weight or local models through the same node interfaces.
+
+**Possible alternatives include:**
+- Local/open-weight LLMs served via Ollama or vLLM
+- Open embeddings models
+- Self-hosted vector databases
+
+## Human Role & Democratic Process
+
+The system does **not replace deliberation or public decision-making**. It structures citizen input into reviewable proposal options, which remain subject to human interpretation, contestation, and iteration.
+
 ## End-to-End Process Flow
 
 ```
@@ -28,13 +41,19 @@ Impact Scoring → Civic Explanation → Dashboard Record → Supabase → Publi
 
 n8n flow ---> https://github.com/espaifacto-code/civic-voice-ai/blob/main/n8n/participatory-civic-ai-mvp-n8n-workflow.json
 
+**Open Architecture:**
+- Frontend: Lovable + GitHub Pages
+- Workflow orchestration: n8n
+- Storage: Supabase
+- Retrieval: embeddings + vector search
+- AI steps: replaceable model interfaces for generation, review, scoring, and explanation
+
 ### 1. Participation Layer
 **Purpose:** Capture and validate citizen input with consent awareness
 - **Citizen Input:** Raw responses from Tally forms, workshops, or webhooks
 - **Consent Verification:** Ensures processing permission before AI pipeline begins
 - **Data Normalization:** Converts messy form answers into structured civic variables
 - **Civic Profile:** Builds comprehensive profile of issue, priorities, and community context
-
 
 ### 2. Grounding Layer
 **Purpose:** Connect citizen concerns with relevant policy and planning knowledge
@@ -61,24 +80,72 @@ n8n flow ---> https://github.com/espaifacto-code/civic-voice-ai/blob/main/n8n/pa
 - **Supabase:** Stores civic records for auditability and reuse
 - **Public Transparency Dashboard:** Displays proposals, reviews, and impact data
 
+## Policy and Planning Sources Used for Context Retrieval
+
+The RAG (Retrieval-Augmented Generation) system grounds proposals in real civic and planning documents:
+
+1. **Barcelona Housing Plan 2016–2025**
+2. **Geography Fieldwork – Urban/Location methods PDF**
+3. **MPGM Gràcia / heritage-planning memory**
+4. **Urban Green Justice Toolkit**
+5. **Urban Planning for City Leaders**
+6. **Guide to Planning Healthy Cities**
+7. **Open Data for Smart City and Urban Development**
+8. **EU report on Open Data in Cities**
+
 ## Key Features
 
 - ✅ **Consent-aware:** Explicit permission checks before processing
 - ✅ **RAG-grounded:** Proposals based on retrieved policy documents, not model hallucination
 - ✅ **Plurality-preserving:** Generates multiple solution types instead of single answers
+- ✅ **AI Transparency:** Complete technical methodology documentation at `/transparency`
+- ✅ **Model-portable:** Architecture supports swapping to open-weight or local models
 - ✅ **Ethically reviewed:** Dedicated governance layer prevents harmful outputs
 - ✅ **Publicly explainable:** All decisions and outputs are transparent and auditable
+- ✅ **Model-portable:** Architecture supports open-weight and local AI models
 
 ## Technology Stack
 
 - **Frontend:** React + TypeScript + Tailwind CSS + Shadcn/ui
 - **Backend:** n8n workflow automation
-- **AI:** OpenAI GPT models with retrieval-augmented generation
+- **AI:** OpenAI GPT models with retrieval-augmented generation (architecturally portable)
 - **Database:** Supabase (vector storage + PostgreSQL)
 - **Deployment:** GitHub Pages
+- **Performance:** Code splitting and lazy loading for optimal bundle sizes
+
+## AI Transparency & Methodology
+
+Complete technical transparency is available at the `/transparency` page, which documents:
+
+- **Input Collection:** What citizen data is collected and how consent works
+- **Retrieval Layer:** How the RAG system grounds proposals in policy documents
+- **Model Portability:** Current models used and how to swap to open-weight alternatives
+- **Ethical Review:** What the governance layer checks for
+- **Data Storage:** What information is stored in Supabase for auditability
+- **Source Documents:** The policy and planning corpus used for context retrieval
+- **Reproduction:** How to set up and adapt the workflow for other contexts
+
+This transparency ensures the system remains accountable, reproducible, and aligned with democratic values.
+
+## Limitations
+
+- Retrieved context depends on the quality and scope of source documents
+- Proposal outputs are assistive, not authoritative
+- Ethical review is a safeguard layer, not a substitute for public governance
+- Communities and institutions should be able to challenge or revise outputs
+- Current implementation uses OpenAI models for prototyping (architecturally portable)
+
+## Relation to TÀNIA
+
+This MVP extends a line of work already explored in projects such as TÀNIA, which combined citizen science, social innovation, technology, and participatory processes around public-space coexistence and urban wellbeing. TÀNIA addressed acoustic pollution and convivencia through awareness, citizen science, participatory diagnosis, prototyping, and technological intervention. The current MVP translates that same participatory logic into an AI-assisted civic proposal pipeline focused on structured citizen input, grounded policy context, ethical safeguards, and public transparency.
+
+**TÀNIA = participatory urban innovation precedent**  
+**Civic Voice AI = AI-assisted participatory governance evolution**
+
 ## License
 
 This project is licensed under the **MIT License**. See [LICENSE](./LICENSE) for details.
+
 ## Access Points
 
 ### For Citizens
@@ -89,6 +156,7 @@ This project is licensed under the **MIT License**. See [LICENSE](./LICENSE) for
 - **Dashboard:** `/dashboard` - Real-time metrics and analytics
 - **Proposal Explorer:** `/explorer` - Detailed proposal inspection
 - **Process Flow:** `/process` - Interactive architecture diagram with tooltips
+- **AI Transparency:** `/transparency` - Methodology and technical details
 
 ## Mozilla Alignment
 
@@ -98,6 +166,7 @@ This system demonstrates responsible AI for democratic participation by:
 - Grounding outputs in verifiable policy documents
 - Including ethical review before public presentation
 - Supporting transparency through public dashboards
+- Being architecturally portable to open-weight AI models
 - Enabling iterative improvement through revision loops
 
 ## Limitations & Risks
