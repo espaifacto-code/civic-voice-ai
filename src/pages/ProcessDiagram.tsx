@@ -1,4 +1,4 @@
-import { ArrowRight, RotateCcw } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 
 const lanes = [
   {
@@ -6,27 +6,28 @@ const lanes = [
     color: "bg-blue-50 border-blue-200",
     headerBg: "bg-blue-500",
     dotColor: "bg-blue-500",
-    steps: ["Citizen Input", "Consent Check", "Data Normalization", "Civic Profile"],
+    steps: ["Citizen Input", "Consent Verification", "Data Normalization", "Civic Profile"],
   },
   {
     label: "Grounding",
     color: "bg-teal-50 border-teal-200",
     headerBg: "bg-teal-500",
     dotColor: "bg-teal-500",
-    steps: ["Build Query", "Retrieve Policy Context", "Merge Context"],
+    steps: ["Build Query", "Retrieve Policy Context", "Citizen + Policy Context"],
   },
   {
     label: "Generation",
     color: "bg-purple-50 border-purple-200",
     headerBg: "bg-purple-500",
     dotColor: "bg-purple-500",
-    steps: ["Generate Solution Types", "Generate Proposals"],
+    steps: ["Generate Solution Types", "Generate Civic Proposals"],
   },
   {
     label: "Governance",
     color: "bg-orange-50 border-orange-200",
     headerBg: "bg-orange-500",
     dotColor: "bg-orange-500",
+    subtitle: "Safeguards against bias, exclusion, and unrealistic policy outputs",
     steps: ["Ethical Review", "Approval Gate", "Revision Loop"],
   },
   {
@@ -34,7 +35,7 @@ const lanes = [
     color: "bg-emerald-50 border-emerald-200",
     headerBg: "bg-emerald-500",
     dotColor: "bg-emerald-500",
-    steps: ["Impact Scoring", "Civic Explanation", "Dashboard Record", "Supabase", "Public Dashboard"],
+    steps: ["Impact Scoring", "Civic Explanation", "Dashboard Record", "Supabase", "Public Transparency Dashboard"],
   },
 ];
 
@@ -53,7 +54,7 @@ export default function ProcessDiagram() {
         {/* Header */}
         <div className="mb-10 text-center">
           <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Civic AI Process Flow
+            Participatory Civic AI Pipeline
           </h1>
           <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
             How citizen input is transformed into AI-generated civic proposals with ethical oversight and impact evaluation.
@@ -82,15 +83,24 @@ export default function ProcessDiagram() {
               >
                 {/* Lane Header */}
                 <div
-                  className={`flex items-center justify-center px-5 py-4 min-w-[140px] ${lane.headerBg} text-white`}
+                  className={`flex flex-col items-center justify-center px-5 py-4 min-w-[140px] ${lane.headerBg} text-white`}
                 >
                   <span className="text-sm font-bold tracking-wide whitespace-nowrap">
                     {lane.label}
                   </span>
+                  {lane.subtitle ? (
+                    <span className="mt-1 text-[11px] font-medium text-white/80 text-center">
+                      {lane.subtitle}
+                    </span>
+                  ) : null}
                 </div>
 
                 {/* Steps */}
-                <div className="flex items-center gap-2 px-5 py-4 flex-1">
+                <div
+                  className={`flex items-center gap-2 px-5 py-4 flex-1 ${
+                    lane.label === "Governance" ? "pb-12" : ""
+                  }`}
+                >
                   {lane.steps.map((step, stepIdx) => {
                     const isApprovalGate =
                       lane.label === "Governance" && step === "Approval Gate";
@@ -110,11 +120,19 @@ export default function ProcessDiagram() {
                             {step}
                           </span>
 
-                          {/* Revision loop arrow */}
+                          {/* Approval gate indicator */}
+                          {isApprovalGate && (
+                            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-orange-500 text-[10px]">
+                              <ArrowDown className="h-3 w-3" />
+                              <span className="font-semibold">if issues</span>
+                            </div>
+                          )}
+
+                          {/* Revision loop hint */}
                           {isRevisionLoop && (
-                            <div className="absolute -top-5 left-1/2 -translate-x-1/2 flex items-center gap-1 text-orange-500">
-                              <RotateCcw className="h-3.5 w-3.5" />
-                              <span className="text-[10px] font-semibold">Loop</span>
+                            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-1 text-orange-500 text-[10px]">
+                              <ArrowLeft className="h-3 w-3" />
+                              <span className="font-semibold">back to proposal review</span>
                             </div>
                           )}
                         </div>
@@ -169,6 +187,9 @@ export default function ProcessDiagram() {
             Citizen input is translated into policy proposals using AI models combined
             with contextual knowledge. All proposals undergo ethical review and impact
             scoring before being presented.
+          </p>
+          <p className="mt-3 font-semibold text-muted-foreground">
+            Citizen input → grounded proposals → ethical oversight → public transparency
           </p>
         </div>
       </div>
