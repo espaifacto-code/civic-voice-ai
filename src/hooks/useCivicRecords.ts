@@ -14,6 +14,8 @@ export function useCivicRecords() {
       if (error) throw error;
       return (data as unknown as CivicRecord[]) ?? [];
     },
+    refetchInterval: 15000, // Poll every 15 seconds
+    refetchIntervalInBackground: false,
   });
 
   const queryClient = useQueryClient();
