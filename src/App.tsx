@@ -46,7 +46,7 @@ const App = () => (
       <BrowserRouter basename="/civic-voice-ai/">
         <Navbar />
         <Routes>
-  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+  <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/explorer" element={<Explorer />} />
           <Route path="/process" element={<ProcessDiagram />} />
