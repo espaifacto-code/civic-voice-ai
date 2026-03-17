@@ -1,3 +1,4 @@
+                  {sorted.slice(0, 100).map((record) => (
 import { useMemo, useState } from "react";
 import { useCivicRecords } from "@/hooks/useCivicRecords";
 import MetricCard from "@/components/dashboard/MetricCard";
