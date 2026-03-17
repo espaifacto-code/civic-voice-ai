@@ -10,7 +10,8 @@ export function useCivicRecords() {
       const { data, error } = await supabase
         .from("civic_records")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .limit(100);
       if (error) throw error;
       return (data as unknown as CivicRecord[]) ?? [];
     },
