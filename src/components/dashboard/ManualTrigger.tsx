@@ -84,16 +84,30 @@ export default function ManualTrigger({ onTrigger, onTriggerSuccess }: ManualTri
         pilot_topic: formData.issue || "civic participation",
       };
 
-      const response = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      let response, result;
+      try {
+        response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+        // Try to parse JSON, fallback to text
+        result = await response.json().catch(async () => ({ error: await response.text() }));
+      } catch (err) {
+        setStatus('error');
+        setIsLoading(false);
+        toast({
+          title: "Network Error",
+          description: (err instanceof Error ? err.message : String(err)) +
+            "\nCheck your network connection or CORS settings.",
+          variant: "destructive",
+        });
+        return;
+      }
 
       if (response.ok) {
-        const result = await response.json();
         setStatus('success');
         toast({
           title: "Workflow Triggered",
@@ -102,17 +116,16 @@ export default function ManualTrigger({ onTrigger, onTriggerSuccess }: ManualTri
         onTrigger?.({ ...formData, result });
         onTriggerSuccess?.(); // Refresh dashboard data
       } else {
-        const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
+        setStatus('error');
+        toast({
+          title: "Trigger Failed",
+          description:
+            (result && (result.error || result.message))
+              ? String(result.error || result.message)
+              : `There was an error triggering the workflow.\nStatus: ${response.status} ${response.statusText}`,
+          variant: "destructive",
+        });
       }
-    } catch (error) {
-      console.error('Webhook trigger error:', error);
-      setStatus('error');
-      toast({
-        title: "Trigger Failed",
-        description: error instanceof Error ? error.message : "Failed to start the workflow. Please check your webhook URL.",
-        variant: "destructive",
-      });
     } finally {
       setIsLoading(false);
     }

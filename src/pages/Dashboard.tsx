@@ -140,7 +140,25 @@ export default function Dashboard() {
 
   if (isLoading) return <div className="flex min-h-[50vh] items-center justify-center text-muted-foreground">Loading data…</div>;
 
-  const COLORS = ["hsl(160, 84%, 39%)", "hsl(38, 92%, 50%)", "hsl(217, 91%, 60%)", "hsl(280, 81%, 60%)"];
+  // Modern color palette for charts
+  const COLORS = [
+    "#22d3ee", // cyan
+    "#818cf8", // indigo
+    "#f472b6", // pink
+    "#facc15", // yellow
+    "#34d399", // green
+    "#f87171", // red
+    "#a3e635", // lime
+    "#38bdf8", // sky
+  ];
+
+  // Gradient defs for charts
+  const renderGradient = (id, color) => (
+    <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="5%" stopColor={color} stopOpacity={0.8} />
+      <stop offset="95%" stopColor={color} stopOpacity={0.2} />
+    </linearGradient>
+  );
 
   return (
     <div className="container space-y-8 py-8">
@@ -183,11 +201,21 @@ export default function Dashboard() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={issueData} layout="horizontal" margin={{ left: 20, right: 20, top: 20, bottom: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(214, 32%, 91%)" />
-                    <XAxis type="number" tick={{ fontSize: 12 }} />
-                    <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={120} />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="hsl(217, 91%, 60%)" radius={[0, 4, 4, 0]} />
+                    <defs>
+                      {COLORS.map((color, idx) => renderGradient(`bar-gradient-${idx}`, color))}
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis type="number" tick={{ fontSize: 12 }} axisLine={false} />
+                    <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={120} axisLine={false} />
+                    <Tooltip contentStyle={{ background: '#fff', borderRadius: 8, fontSize: 13 }} />
+                    <Bar dataKey="count" radius={[0, 8, 8, 0]}
+                      fill="url(#bar-gradient-0)"
+                      isAnimationActive={true}
+                    >
+                      {issueData.map((_, idx) => (
+                        <Cell key={idx} fill={`url(#bar-gradient-${idx % COLORS.length})`} />
+                      ))}
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -205,6 +233,9 @@ export default function Dashboard() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
+                    <defs>
+                      {COLORS.map((color, idx) => renderGradient(`pie-gradient-${idx}`, color))}
+                    </defs>
                     <Pie
                       data={statusData}
                       cx="50%"
@@ -213,12 +244,13 @@ export default function Dashboard() {
                       outerRadius={120}
                       dataKey="value"
                       paddingAngle={2}
+                      isAnimationActive={true}
                     >
                       {statusData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell key={`cell-${index}`} fill={`url(#pie-gradient-${index % COLORS.length})`} />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip contentStyle={{ background: '#fff', borderRadius: 8, fontSize: 13 }} />
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="flex justify-center gap-4 mt-4">
@@ -247,19 +279,19 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={400}>
-                <RadarChart data={impactData}>
-                  <PolarGrid />
-                  <PolarAngleAxis dataKey="metric" tick={{ fontSize: 12 }} />
-                  <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fontSize: 10 }} />
+                <RadarChart data={impactData} outerRadius={150}>
+                  <PolarGrid stroke="#e5e7eb" />
+                  <PolarAngleAxis dataKey="metric" tick={{ fontSize: 13, fill: '#334155' }} />
+                  <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fontSize: 11, fill: '#64748b' }} />
                   <Radar
                     name="Average Score"
                     dataKey="value"
-                    stroke="hsl(217, 91%, 60%)"
-                    fill="hsl(217, 91%, 60%)"
-                    fillOpacity={0.3}
-                    strokeWidth={2}
+                    stroke="#818cf8"
+                    fill="#818cf8"
+                    fillOpacity={0.25}
+                    strokeWidth={3}
                   />
-                  <Tooltip />
+                  <Tooltip contentStyle={{ background: '#fff', borderRadius: 8, fontSize: 13 }} />
                 </RadarChart>
               </ResponsiveContainer>
             </CardContent>
@@ -345,16 +377,20 @@ export default function Dashboard() {
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={timelineData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(214, 32%, 91%)" />
-                  <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip />
+                  <defs>
+                    {renderGradient('area-gradient', '#22d3ee')}
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis dataKey="date" tick={{ fontSize: 12 }} axisLine={false} />
+                  <YAxis tick={{ fontSize: 12 }} axisLine={false} />
+                  <Tooltip contentStyle={{ background: '#fff', borderRadius: 8, fontSize: 13 }} />
                   <Area
                     type="monotone"
                     dataKey="count"
-                    stroke="hsl(217, 91%, 60%)"
-                    fill="hsl(217, 91%, 60%)"
-                    fillOpacity={0.3}
+                    stroke="#22d3ee"
+                    fill="url(#area-gradient)"
+                    fillOpacity={0.5}
+                    strokeWidth={3}
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -371,12 +407,15 @@ export default function Dashboard() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={250}>
                   <ComposedChart data={impactData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(214, 32%, 91%)" />
-                    <XAxis dataKey="metric" tick={{ fontSize: 12 }} />
-                    <YAxis domain={[0, 10]} tick={{ fontSize: 12 }} />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="hsl(217, 91%, 60%)" radius={[4, 4, 0, 0]} />
-                    <Line type="monotone" dataKey="fullMark" stroke="hsl(214, 32%, 91%)" strokeDasharray="5 5" />
+                    <defs>
+                      {renderGradient('impact-bar-gradient', '#818cf8')}
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis dataKey="metric" tick={{ fontSize: 12 }} axisLine={false} />
+                    <YAxis domain={[0, 10]} tick={{ fontSize: 12 }} axisLine={false} />
+                    <Tooltip contentStyle={{ background: '#fff', borderRadius: 8, fontSize: 13 }} />
+                    <Bar dataKey="value" fill="url(#impact-bar-gradient)" radius={[8, 8, 0, 0]} />
+                    <Line type="monotone" dataKey="fullMark" stroke="#a3a3a3" strokeDasharray="5 5" />
                   </ComposedChart>
                 </ResponsiveContainer>
               </CardContent>
