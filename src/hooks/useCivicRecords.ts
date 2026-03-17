@@ -19,7 +19,7 @@ export function useCivicRecords() {
   const queryClient = useQueryClient();
   useEffect(() => {
     const channel = supabase
-      .channel("public:civic_records")
+      .channel("dashboard-changes")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "civic_records" },
