@@ -16,6 +16,8 @@ export function useCivicRecords() {
     },
     refetchInterval: 15000, // Poll every 15 seconds
     refetchIntervalInBackground: false,
+    staleTime: 0,
+    gcTime: 0,
   });
 
   const queryClient = useQueryClient();
