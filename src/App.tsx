@@ -10,6 +10,7 @@ import Explorer from "@/pages/Explorer";
 import ProcessDiagram from "@/pages/ProcessDiagram";
 import Index from "@/pages/Index";
 import NotFound from "./pages/NotFound";
+import { Navigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Lazy load the Transparency page for better performance
@@ -45,7 +46,7 @@ const App = () => (
       <BrowserRouter basename="/civic-voice-ai/">
         <Navbar />
         <Routes>
-          <Route path="/" element={<Index />} />
+  <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/explorer" element={<Explorer />} />
           <Route path="/process" element={<ProcessDiagram />} />
