@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 
 export default function Dashboard() {
-  const { data: records = [], isLoading } = useCivicRecords();
+  const { data: records = [], isLoading, refetch } = useCivicRecords();
   const [sortKey, setSortKey] = useState<"created_at" | "avg_social_impact">("created_at");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
 
@@ -408,7 +408,7 @@ export default function Dashboard() {
         </TabsContent>
 
         <TabsContent value="trigger" className="space-y-6">
-          <ManualTrigger />
+          <ManualTrigger onTriggerSuccess={() => refetch()} />
         </TabsContent>
       </Tabs>
     </div>

@@ -13,9 +13,10 @@ import { useQueryClient } from "@tanstack/react-query";
 
 interface ManualTriggerProps {
   onTrigger?: (data: any) => void;
+  onTriggerSuccess?: () => void;
 }
 
-export default function ManualTrigger({ onTrigger }: ManualTriggerProps) {
+export default function ManualTrigger({ onTrigger, onTriggerSuccess }: ManualTriggerProps) {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -99,9 +100,7 @@ export default function ManualTrigger({ onTrigger }: ManualTriggerProps) {
           description: "The civic AI pipeline has been started. Check the dashboard for results.",
         });
         onTrigger?.({ ...formData, result });
-        // Access queryClient from global context or prop - use useQueryClient from react-query
-        queryClient.invalidateQueries({ queryKey: ['civic-records'] });
-        queryClient.invalidateQueries({ queryKey: ['civic-records'] });
+        onTriggerSuccess?.(); // Refresh dashboard data
       } else {
         const errorText = await response.text();
         throw new Error(`HTTP ${response.status}: ${errorText}`);
