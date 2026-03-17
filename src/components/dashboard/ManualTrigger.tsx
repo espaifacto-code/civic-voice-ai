@@ -9,12 +9,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Play, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ManualTriggerProps {
   onTrigger?: (data: any) => void;
 }
 
 export default function ManualTrigger({ onTrigger }: ManualTriggerProps) {
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [formData, setFormData] = useState({
@@ -97,6 +99,9 @@ export default function ManualTrigger({ onTrigger }: ManualTriggerProps) {
           description: "The civic AI pipeline has been started. Check the dashboard for results.",
         });
         onTrigger?.({ ...formData, result });
+        // Access queryClient from global context or prop - use useQueryClient from react-query
+        queryClient.invalidateQueries({ queryKey: ['civic-records'] });
+        queryClient.invalidateQueries({ queryKey: ['civic-records'] });
       } else {
         const errorText = await response.text();
         throw new Error(`HTTP ${response.status}: ${errorText}`);
