@@ -18,17 +18,18 @@ export function useCivicRecords() {
 
   const queryClient = useQueryClient();
   useEffect(() => {
-    // Subscribe to all changes (insert, update, delete)
     const channel = supabase
       .channel("public:civic_records")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "civic_records" },
-        () => {
+        (payload) => {
+          console.log("Supabase realtime event:", payload);
           queryClient.invalidateQueries({ queryKey: ["civic-records"] });
         }
       )
       .subscribe();
+
     return () => {
       supabase.removeChannel(channel);
     };
