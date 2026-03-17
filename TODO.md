@@ -8,9 +8,9 @@
 
 **Step 3: (Optional) Add fallback mapping in n8n Code node for direct keys**
 
-**Step 4: Test dashboard trigger**
+**Step 4: Dashboard refresh fix**
 
-**Step 5: Verify n8n output shows populated fields**
+**Step 5: Verify n8n dashboard record insert → Supabase → UI update**
 
 **Step 6: Complete**
 

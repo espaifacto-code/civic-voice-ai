@@ -42,7 +42,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter basename="/">
+      <BrowserRouter basename="/civic-voice-ai/">
         <Navbar />
         <Routes>
           <Route path="/" element={<Index />} />
@@ -62,3 +62,4 @@ const App = () => (
 );
 
 export default App;
+
