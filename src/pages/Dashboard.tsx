@@ -18,6 +18,7 @@ export default function Dashboard() {
   const { data: records = [], isLoading, refetch } = useCivicRecords();
   const [sortKey, setSortKey] = useState<"created_at" | "avg_social_impact">("created_at");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const metrics = useMemo(() => {
     if (!records.length) return null;
@@ -296,31 +297,33 @@ export default function Dashboard() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-2">
-            {/* Recent Records Table */}
+          <div className="grid gap-6 lg:grid-cols-3">
+            {/* Recent Submissions */}
             <Card>
               <CardHeader>
                 <CardTitle>Recent Submissions</CardTitle>
-                <CardDescription>Latest citizen input processed</CardDescription>
+                <CardDescription>Click a row to view its proposals</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {sorted.slice(0, 5).map((record) => (
-                    <div key={record.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex-1">
-                        <p className="font-medium text-sm">{record.issue || 'General Issue'}</p>
+                <div className="space-y-2">
+                  {sorted.slice(0, 8).map((record) => (
+                    <div
+                      key={record.id}
+                      onClick={() => setSelectedId(selectedId === record.id ? null : record.id)}
+                      className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors hover:bg-muted/50 ${selectedId === record.id ? 'border-primary bg-muted/40' : ''}`}
+                    >
+                      <div className="flex-1 min-w-0 mr-2">
+                        <p className="font-medium text-sm truncate">{record.issue || 'General Issue'}</p>
                         <p className="text-xs text-muted-foreground">
                           {format(new Date(record.created_at), 'MMM dd, yyyy')}
                         </p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 shrink-0">
                         <Badge variant={record.approved ? "default" : "secondary"}>
                           {record.approved ? "Approved" : "Review"}
                         </Badge>
-                        {record.avg_social_impact && (
-                          <span className="text-xs font-medium">
-                            {record.avg_social_impact.toFixed(1)}
-                          </span>
+                        {record.avg_social_impact != null && (
+                          <span className="text-xs font-medium">{record.avg_social_impact.toFixed(1)}</span>
                         )}
                       </div>
                     </div>
@@ -358,37 +361,53 @@ export default function Dashboard() {
                 )}
               </CardContent>
             </Card>
-          </div>
 
-          {/* Proposals Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Proposals</CardTitle>
-              <CardDescription>All proposals from recent records</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {records.filter(r => r.proposals && r.proposals.length > 0).length === 0 ? (
-                <div className="text-muted-foreground">No proposals found in records.</div>
-              ) : (
-                records
-                  .filter(r => r.proposals && r.proposals.length > 0)
-                  .map(record => (
-                    <div key={record.id} className="mb-4">
-                      <div className="font-semibold mb-1">{record.issue || 'No issue title'}</div>
-                      <ul className="list-disc pl-5">
-                        {Array.isArray(record.proposals) ? (
-                          record.proposals.map((proposal, idx) => (
-                            <li key={idx}>{typeof proposal === 'string' ? proposal : JSON.stringify(proposal)}</li>
-                          ))
-                        ) : (
-                          <li className="text-muted-foreground">No proposals</li>
-                        )}
-                      </ul>
+            {/* Proposal Detail Panel */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Proposal Detail</CardTitle>
+                <CardDescription>
+                  {selectedId
+                    ? sorted.find(r => r.id === selectedId)?.issue || 'Selected submission'
+                    : 'Select a submission to view proposals'}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {(() => {
+                  const selected = sorted.find(r => r.id === selectedId);
+                  if (!selected) {
+                    return (
+                      <p className="text-sm text-muted-foreground">Click any row on the left to see its AI-generated proposals here.</p>
+                    );
+                  }
+                  const proposals = Array.isArray(selected.proposals) ? selected.proposals : [];
+                  if (proposals.length === 0) {
+                    return <p className="text-sm text-muted-foreground">No proposals stored for this submission.</p>;
+                  }
+                  return (
+                    <div className="space-y-4 overflow-y-auto max-h-80">
+                      {proposals.map((p: any, idx: number) => (
+                        <div key={idx} className="border rounded-lg p-3 space-y-1">
+                          <p className="font-semibold text-sm">{p.title || `Proposal ${idx + 1}`}</p>
+                          {p.solution && <p className="text-xs text-muted-foreground">{p.solution}</p>}
+                          {Array.isArray(p.implementation_steps) && p.implementation_steps.length > 0 && (
+                            <ul className="list-disc pl-4 mt-1 space-y-0.5">
+                              {p.implementation_steps.map((step: string, i: number) => (
+                                <li key={i} className="text-xs">{step}</li>
+                              ))}
+                            </ul>
+                          )}
+                          {p.expected_impact_6m && (
+                            <p className="text-xs text-primary font-medium mt-1">Impact: {p.expected_impact_6m}</p>
+                          )}
+                        </div>
+                      ))}
                     </div>
-                  ))
-              )}
-            </CardContent>
-          </Card>
+                  );
+                })()}
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="trends" className="space-y-6">
