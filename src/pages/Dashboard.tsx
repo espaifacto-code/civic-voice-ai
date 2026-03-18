@@ -385,7 +385,7 @@ export default function Dashboard() {
                     return <p className="text-sm text-muted-foreground">No proposals stored for this submission.</p>;
                   }
                   return (
-                    <div className="space-y-4 overflow-y-auto max-h-80">
+                    <div className="space-y-4">
                       {proposals.map((p: any, idx: number) => (
                         <div key={idx} className="border rounded-lg p-3 space-y-1">
                           <p className="font-semibold text-sm">{p.title || `Proposal ${idx + 1}`}</p>
