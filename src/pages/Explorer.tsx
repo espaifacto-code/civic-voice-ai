@@ -107,12 +107,12 @@ export default function Explorer() {
             </div>
 
             {/* Proposals */}
-              {(selected.proposals ?? []).map((p, i) => (
+              {(selected.proposals as any[] ?? []).map((p: any, i: number) => (
               <div key={i} className="rounded-xl bg-primary/[0.03] p-6 shadow-card space-y-4">
                 <h3 className="text-lg font-semibold tracking-tight">{p.title}</h3>
                 <div>
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Problem Summary</h4>
-                  <p className="mt-1 text-sm leading-relaxed">{p.problem_summary}</p>
+                  <p className="mt-1 text-sm leading-relaxed">{p.problem_summary ?? p.solution ?? '—'}</p>
                 </div>
                 <div>
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Solution</h4>
@@ -121,7 +121,7 @@ export default function Explorer() {
                 <div>
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Implementation Steps</h4>
                   <ol className="mt-2 space-y-1">
-                    {p.implementation_steps.map((step, j) => (
+                    {(p.implementation_steps ?? []).map((step, j) => (
                       <li key={j} className="flex gap-3 text-sm">
                         <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">{j + 1}</span>
                         {step}
@@ -132,7 +132,7 @@ export default function Explorer() {
                 <div>
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Stakeholders</h4>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {p.stakeholders.map((s) => (
+                    {(p.stakeholders ?? []).map((s) => (
                       <span key={s} className="rounded-md border bg-secondary px-2 py-0.5 text-xs font-medium">{s}</span>
                     ))}
                   </div>
