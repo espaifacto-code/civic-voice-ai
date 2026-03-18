@@ -50,8 +50,8 @@ export default function Dashboard() {
     const categoryMap = new Map<string, number>();
 
     records.forEach((record) => {
-      // Use category stored by n8n workflow; fall back to keyword detection
-      let category = record.category || null;
+      // Use area/category stored by n8n workflow; fall back to keyword detection
+      let category = record.area || (record as any).category || null;
 
       if (!category) {
         const issueText = (record.issue || '').toLowerCase();

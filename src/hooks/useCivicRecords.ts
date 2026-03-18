@@ -28,7 +28,7 @@ export function useCivicRecords() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "civic_records" },
-        (payload) => {
+        (payload) => {                                              
           console.log("Supabase realtime event:", payload);
           queryClient.invalidateQueries({ queryKey: ["civic-records"] });
         }
