@@ -297,16 +297,16 @@ export default function Dashboard() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-3">
-            {/* Recent Submissions */}
+          <div className="grid gap-6 lg:grid-cols-[2fr_3fr]">
+            {/* Submissions List */}
             <Card>
               <CardHeader>
                 <CardTitle>Recent Submissions</CardTitle>
-                <CardDescription>Click a row to view its proposals</CardDescription>
+                <CardDescription>Click a row to inspect it</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  {sorted.slice(0, 8).map((record) => (
+                  {sorted.slice(0, 10).map((record) => (
                     <div
                       key={record.id}
                       onClick={() => setSelectedId(selectedId === record.id ? null : record.id)}
@@ -314,17 +314,15 @@ export default function Dashboard() {
                     >
                       <div className="flex-1 min-w-0 mr-2">
                         <p className="font-medium text-sm truncate">{record.issue || 'General Issue'}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {format(new Date(record.created_at), 'MMM dd, yyyy')}
-                        </p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-xs text-muted-foreground">{format(new Date(record.created_at), 'MMM dd, yyyy')}</span>
+                          {record.area && <span className="text-xs text-muted-foreground">· {record.area}</span>}
+                        </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         <Badge variant={record.approved ? "default" : "secondary"}>
                           {record.approved ? "Approved" : "Review"}
                         </Badge>
-                        {record.avg_social_impact != null && (
-                          <span className="text-xs font-medium">{record.avg_social_impact.toFixed(1)}</span>
-                        )}
                       </div>
                     </div>
                   ))}
@@ -332,80 +330,140 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            {/* Processing Stats */}
+            {/* Detail Panel — overall stats by default, full submission detail when selected */}
             <Card>
-              <CardHeader>
-                <CardTitle>Processing Statistics</CardTitle>
-                <CardDescription>Detailed breakdown of proposal evaluations</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {metrics && (
-                  <>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Total Processed</span>
-                      <Badge variant="outline">{metrics.total}</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Approved</span>
-                      <Badge variant="default">{metrics.approved}</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Under Review</span>
-                      <Badge variant="secondary">{metrics.revision}</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Success Rate</span>
-                      <Badge variant="outline">{metrics.approvalRate}%</Badge>
-                    </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
+              {(() => {
+                const selected = sorted.find(r => r.id === selectedId);
 
-            {/* Proposal Detail Panel */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Proposal Detail</CardTitle>
-                <CardDescription>
-                  {selectedId
-                    ? sorted.find(r => r.id === selectedId)?.issue || 'Selected submission'
-                    : 'Select a submission to view proposals'}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {(() => {
-                  const selected = sorted.find(r => r.id === selectedId);
-                  if (!selected) {
-                    return (
-                      <p className="text-sm text-muted-foreground">Click any row on the left to see its AI-generated proposals here.</p>
-                    );
-                  }
-                  const proposals = Array.isArray(selected.proposals) ? selected.proposals : [];
-                  if (proposals.length === 0) {
-                    return <p className="text-sm text-muted-foreground">No proposals stored for this submission.</p>;
-                  }
+                if (!selected) {
+                  // Default: overall processing statistics + score breakdown
                   return (
-                    <div className="space-y-4">
-                      {proposals.map((p: any, idx: number) => (
-                        <div key={idx} className="border rounded-lg p-3 space-y-1">
-                          <p className="font-semibold text-sm">{p.title || `Proposal ${idx + 1}`}</p>
-                          {p.solution && <p className="text-xs text-muted-foreground">{p.solution}</p>}
-                          {Array.isArray(p.implementation_steps) && p.implementation_steps.length > 0 && (
-                            <ul className="list-disc pl-4 mt-1 space-y-0.5">
-                              {p.implementation_steps.map((step: string, i: number) => (
-                                <li key={i} className="text-xs">{step}</li>
-                              ))}
-                            </ul>
-                          )}
-                          {p.expected_impact_6m && (
-                            <p className="text-xs text-primary font-medium mt-1">Impact: {p.expected_impact_6m}</p>
+                    <>
+                      <CardHeader>
+                        <CardTitle>Processing Statistics</CardTitle>
+                        <CardDescription>Overall breakdown across all {metrics?.total ?? 0} submissions</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        {metrics && (
+                          <>
+                            <div className="grid grid-cols-2 gap-4">
+                              <div className="border rounded-lg p-4 text-center">
+                                <p className="text-2xl font-bold">{metrics.total}</p>
+                                <p className="text-xs text-muted-foreground mt-1">Total Processed</p>
+                              </div>
+                              <div className="border rounded-lg p-4 text-center">
+                                <p className="text-2xl font-bold">{metrics.approvalRate}%</p>
+                                <p className="text-xs text-muted-foreground mt-1">Approval Rate</p>
+                              </div>
+                              <div className="border rounded-lg p-4 text-center">
+                                <p className="text-2xl font-bold text-green-600">{metrics.approved}</p>
+                                <p className="text-xs text-muted-foreground mt-1">Approved</p>
+                              </div>
+                              <div className="border rounded-lg p-4 text-center">
+                                <p className="text-2xl font-bold text-yellow-600">{metrics.revision}</p>
+                                <p className="text-xs text-muted-foreground mt-1">Under Review</p>
+                              </div>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium mb-3">Average Impact Scores</p>
+                              <div className="space-y-3">
+                                {[
+                                  { label: 'Social Impact', value: metrics.avgSocial },
+                                  { label: 'Feasibility', value: metrics.avgFeasibility },
+                                  { label: 'Inclusivity', value: metrics.avgInclusivity },
+                                  { label: 'Sustainability', value: metrics.avgSustainability },
+                                ].map(({ label, value }) => (
+                                  <div key={label} className="flex items-center gap-3">
+                                    <span className="text-sm w-28 shrink-0">{label}</span>
+                                    <div className="flex-1 bg-muted rounded-full h-2">
+                                      <div className="bg-primary h-2 rounded-full" style={{ width: `${(parseFloat(value) / 10) * 100}%` }} />
+                                    </div>
+                                    <span className="text-sm font-bold w-8 text-right">{value}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </>
+                        )}
+                        <p className="text-xs text-muted-foreground text-center">← Click a submission to inspect it</p>
+                      </CardContent>
+                    </>
+                  );
+                }
+
+                // Selected: full submission detail
+                const proposals = Array.isArray(selected.proposals) ? selected.proposals : [];
+                return (
+                  <>
+                    <CardHeader>
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <CardTitle className="text-base leading-snug">{selected.issue || 'General Issue'}</CardTitle>
+                          <CardDescription className="mt-1">
+                            {selected.area && <span className="mr-2">{selected.area}</span>}
+                            {selected.participant && <span className="mr-2">· {selected.participant}</span>}
+                            · {format(new Date(selected.created_at), 'MMM dd, yyyy')}
+                          </CardDescription>
+                        </div>
+                        <Badge variant={selected.approved ? "default" : "secondary"} className="shrink-0">
+                          {selected.approved ? "Approved" : "Under Review"}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-5">
+                      {/* Scores */}
+                      {(selected.avg_feasibility != null || selected.avg_social_impact != null) && (
+                        <div>
+                          <p className="text-sm font-medium mb-2">Impact Scores</p>
+                          <div className="grid grid-cols-2 gap-2">
+                            {[
+                              { label: 'Social Impact', value: selected.avg_social_impact },
+                              { label: 'Feasibility', value: selected.avg_feasibility },
+                              { label: 'Inclusivity', value: selected.avg_inclusivity },
+                              { label: 'Sustainability', value: selected.avg_sustainability },
+                            ].map(({ label, value }) => value != null && (
+                              <div key={label} className="border rounded-lg p-3 flex items-center justify-between">
+                                <span className="text-xs text-muted-foreground">{label}</span>
+                                <span className="text-sm font-bold">{value.toFixed(1)}<span className="text-xs font-normal text-muted-foreground">/10</span></span>
+                              </div>
+                            ))}
+                          </div>
+                          {selected.ethical_issues_count != null && selected.ethical_issues_count > 0 && (
+                            <p className="text-xs text-yellow-600 mt-2">⚠ {selected.ethical_issues_count} ethical issue{selected.ethical_issues_count > 1 ? 's' : ''} flagged</p>
                           )}
                         </div>
-                      ))}
-                    </div>
-                  );
-                })()}
-              </CardContent>
+                      )}
+
+                      {/* Proposals */}
+                      <div>
+                        <p className="text-sm font-medium mb-2">AI-Generated Proposals ({proposals.length})</p>
+                        {proposals.length === 0 ? (
+                          <p className="text-sm text-muted-foreground">No proposals stored for this submission.</p>
+                        ) : (
+                          <div className="space-y-3">
+                            {proposals.map((p: any, idx: number) => (
+                              <div key={idx} className="border rounded-lg p-3 space-y-1.5">
+                                <p className="font-semibold text-sm">{p.title || `Proposal ${idx + 1}`}</p>
+                                {p.solution && <p className="text-xs text-muted-foreground">{p.solution}</p>}
+                                {Array.isArray(p.implementation_steps) && p.implementation_steps.length > 0 && (
+                                  <ul className="list-disc pl-4 space-y-0.5 mt-1">
+                                    {p.implementation_steps.map((step: string, i: number) => (
+                                      <li key={i} className="text-xs">{step}</li>
+                                    ))}
+                                  </ul>
+                                )}
+                                {p.expected_impact_6m && (
+                                  <p className="text-xs text-primary font-medium mt-1">Impact: {p.expected_impact_6m}</p>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </>
+                );
+              })()}
             </Card>
           </div>
         </TabsContent>
