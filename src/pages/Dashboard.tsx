@@ -50,25 +50,22 @@ export default function Dashboard() {
     const categoryMap = new Map<string, number>();
 
     records.forEach((record) => {
-      let category = 'Other';
+      // Use category stored by n8n workflow; fall back to keyword detection
+      let category = record.category || null;
 
-      // Try to categorize based on issue description or field
-      const issueText = (record.issue || record.description || '').toLowerCase();
-
-      if (issueText.includes('hous') || issueText.includes('rent') || issueText.includes('apart')) {
-        category = 'Housing';
-      } else if (issueText.includes('transport') || issueText.includes('traffic') || issueText.includes('bus') || issueText.includes('metro')) {
-        category = 'Transportation';
-      } else if (issueText.includes('environment') || issueText.includes('green') || issueText.includes('park') || issueText.includes('pollut')) {
-        category = 'Environment';
-      } else if (issueText.includes('education') || issueText.includes('school') || issueText.includes('learn')) {
-        category = 'Education';
-      } else if (issueText.includes('health') || issueText.includes('medical') || issueText.includes('care')) {
-        category = 'Healthcare';
-      } else if (issueText.includes('community') || issueText.includes('safety') || issueText.includes('crime')) {
-        category = 'Community Safety';
-      } else if (issueText.includes('economy') || issueText.includes('job') || issueText.includes('business')) {
-        category = 'Economy';
+      if (!category) {
+        const issueText = (record.issue || '').toLowerCase();
+        if (/(housing|rent|eviction|home|homeless|habitat)/.test(issueText)) category = 'Housing';
+        else if (/(mobility|traffic|bike|bus|transport|walk|pedestrian|street)/.test(issueText)) category = 'Mobility';
+        else if (/(green|tree|park|nature|heat|climate|sustainab|environment|pollut)/.test(issueText)) category = 'Environment';
+        else if (/(safety|violence|crime|lighting|security)/.test(issueText)) category = 'Safety';
+        else if (/(accessib|disab|inclusive|universal design)/.test(issueText)) category = 'Accessibility';
+        else if (/(youth|school|education|learning|children)/.test(issueText)) category = 'Education';
+        else if (/(health|care|mental|wellbeing|medical)/.test(issueText)) category = 'Health';
+        else if (/(community|participation|co-design|civic|social cohesion)/.test(issueText)) category = 'Community';
+        else if (/(clean|waste|trash|noise|flood|water|street light|road)/.test(issueText)) category = 'Public Space';
+        else if (/(unemploy|job|economy|business)/.test(issueText)) category = 'Economy';
+        else category = 'Other';
       }
 
       categoryMap.set(category, (categoryMap.get(category) ?? 0) + 1);

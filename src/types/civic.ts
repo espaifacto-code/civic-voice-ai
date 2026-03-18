@@ -21,6 +21,7 @@ export interface CivicRecord {
   approved: boolean | null;
   ethical_issues_count: number | null;
   status: string | null;
+  category: string | null;
   proposals: Proposal[] | null;
   scores: Record<string, number> | null;
   ethical_issues: string[] | null;
