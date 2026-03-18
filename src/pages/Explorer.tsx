@@ -160,10 +160,16 @@ export default function Explorer() {
                 <p className="mt-2 text-sm text-emerald-700">This proposal meets all ethical guidelines.</p>
               ) : (
                 <div className="mt-3 space-y-2">
-                  <p className="text-sm text-amber-700">{selected.ethical_issues_count} ethical issue(s) identified:</p>
-                  {(selected.ethical_issues as string[] | null)?.map((issue, i) => (
-                    <div key={i} className="rounded-lg bg-amber-100/60 px-3 py-2 text-sm text-amber-800">{issue}</div>
-                  ))}
+                  <p className="text-sm text-amber-700">{selected.ethical_issues_count ?? 0} ethical issue(s) identified:</p>
+                  {Array.isArray(selected.ethical_issues) && (selected.ethical_issues as string[]).length > 0 ? (
+                    (selected.ethical_issues as string[]).map((issue, i) => (
+                      <div key={i} className="rounded-lg bg-amber-100/60 px-3 py-2 text-sm text-amber-800">{issue}</div>
+                    ))
+                  ) : (
+                    <div className="rounded-lg bg-amber-100/60 px-3 py-2 text-sm text-amber-800 italic">
+                      Ethical issue details not yet recorded.
+                    </div>
+                  )}
                 </div>
               )}
             </div>
