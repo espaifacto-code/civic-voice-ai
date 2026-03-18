@@ -107,7 +107,7 @@ export default function Explorer() {
             </div>
 
             {/* Proposals */}
-            {(selected.proposals as Proposal[] | null)?.map((p, i) => (
+              {(selected.proposals ?? []).map((p, i) => (
               <div key={i} className="rounded-xl bg-primary/[0.03] p-6 shadow-card space-y-4">
                 <h3 className="text-lg font-semibold tracking-tight">{p.title}</h3>
                 <div>
