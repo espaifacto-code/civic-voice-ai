@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { lazy, Suspense } from "react";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import Dashboard from "@/pages/Dashboard";
 import Explorer from "@/pages/Explorer";
 import ProcessDiagram from "@/pages/ProcessDiagram";
@@ -57,6 +58,7 @@ const App = () => (
           } />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Footer />
       </HashRouter>
     </TooltipProvider>
   </QueryClientProvider>
