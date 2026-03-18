@@ -7,7 +7,7 @@ export default function Footer() {
           <span className="hidden sm:inline">·</span>
           <a href="mailto:mikelguelbenzu@gmail.com" className="hover:text-foreground transition-colors">mikelguelbenzu@gmail.com</a>
           <span className="hidden sm:inline">·</span>
-          <a href="https://github.com/Mikel_LG" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
+          <a href="https://github.com/MikelLG" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
           <span className="hidden sm:inline">·</span>
           <a href="https://www.linkedin.com/in/mikel-llobera-guelbenzu/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">LinkedIn</a>
           <span className="hidden sm:inline">·</span>
