@@ -198,7 +198,7 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={issueData} layout="horizontal" margin={{ left: 20, right: 20, top: 20, bottom: 20 }}>
+                  <BarChart data={issueData} layout="vertical" margin={{ left: 20, right: 20, top: 20, bottom: 20 }}>
                     <defs>
                       {COLORS.map((color, idx) => renderGradient(`bar-gradient-${idx}`, color))}
                     </defs>
