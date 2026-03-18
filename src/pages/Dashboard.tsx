@@ -138,23 +138,31 @@ export default function Dashboard() {
 
   if (isLoading) return <div className="flex min-h-[50vh] items-center justify-center text-muted-foreground">Loading data…</div>;
 
-  // Modern color palette for charts
+  // Professional civic palette — blue/indigo/teal family
   const COLORS = [
-    "#22d3ee", // cyan
-    "#818cf8", // indigo
-    "#f472b6", // pink
-    "#facc15", // yellow
-    "#34d399", // green
-    "#f87171", // red
-    "#a3e635", // lime
-    "#38bdf8", // sky
+    "#1d4ed8", // blue-700
+    "#2563eb", // blue-600
+    "#3b82f6", // blue-500
+    "#0ea5e9", // sky-500
+    "#0891b2", // cyan-600
+    "#0d9488", // teal-600
+    "#4f46e5", // indigo-600
+    "#6366f1", // indigo-500
   ];
 
-  // Gradient defs for charts
+  // Vertical gradient (top→bottom) for pie/area/radar charts
   const renderGradient = (id, color) => (
     <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-      <stop offset="5%" stopColor={color} stopOpacity={0.8} />
-      <stop offset="95%" stopColor={color} stopOpacity={0.2} />
+      <stop offset="5%" stopColor={color} stopOpacity={0.85} />
+      <stop offset="95%" stopColor={color} stopOpacity={0.35} />
+    </linearGradient>
+  );
+
+  // Horizontal gradient (left→right) for horizontal bar chart
+  const renderBarGradient = (id, color) => (
+    <linearGradient id={id} x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stopColor={color} stopOpacity={1} />
+      <stop offset="100%" stopColor={color} stopOpacity={0.55} />
     </linearGradient>
   );
 
@@ -200,16 +208,16 @@ export default function Dashboard() {
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={issueData} layout="vertical" margin={{ left: 20, right: 20, top: 20, bottom: 20 }}>
                     <defs>
-                      {COLORS.map((color, idx) => renderGradient(`bar-gradient-${idx}`, color))}
+                      {COLORS.map((color, idx) => renderBarGradient(`bar-gradient-${idx}`, color))}
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis type="number" tick={{ fontSize: 12 }} axisLine={false} />
-                    <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={120} axisLine={false} />
-                    <Tooltip contentStyle={{ background: '#fff', borderRadius: 8, fontSize: 13 }} />
-                    <Bar dataKey="count" radius={[0, 8, 8, 0]}
-                      fill="url(#bar-gradient-0)"
-                      isAnimationActive={true}
-                    >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <XAxis type="number" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                    <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#475569' }} width={100} axisLine={false} tickLine={false} />
+                    <Tooltip
+                      contentStyle={{ background: '#fff', borderRadius: 8, fontSize: 13, border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                      cursor={{ fill: '#f8fafc' }}
+                    />
+                    <Bar dataKey="count" radius={[0, 6, 6, 0]} isAnimationActive={true}>
                       {issueData.map((_, idx) => (
                         <Cell key={idx} fill={`url(#bar-gradient-${idx % COLORS.length})`} />
                       ))}
