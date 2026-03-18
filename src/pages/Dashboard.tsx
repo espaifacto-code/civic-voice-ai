@@ -362,6 +362,36 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           </div>
+
+          {/* Proposals Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Proposals</CardTitle>
+              <CardDescription>All proposals from recent records</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {records.filter(r => r.proposals && r.proposals.length > 0).length === 0 ? (
+                <div className="text-muted-foreground">No proposals found in records.</div>
+              ) : (
+                records
+                  .filter(r => r.proposals && r.proposals.length > 0)
+                  .map(record => (
+                    <div key={record.id} className="mb-4">
+                      <div className="font-semibold mb-1">{record.issue || 'No issue title'}</div>
+                      <ul className="list-disc pl-5">
+                        {Array.isArray(record.proposals) ? (
+                          record.proposals.map((proposal, idx) => (
+                            <li key={idx}>{typeof proposal === 'string' ? proposal : JSON.stringify(proposal)}</li>
+                          ))
+                        ) : (
+                          <li className="text-muted-foreground">No proposals</li>
+                        )}
+                      </ul>
+                    </div>
+                  ))
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="trends" className="space-y-6">
