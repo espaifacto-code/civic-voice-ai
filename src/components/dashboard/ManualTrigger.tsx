@@ -143,8 +143,7 @@ export default function ManualTrigger({ onTrigger, onTriggerSuccess }: ManualTri
           Manual Workflow Trigger
         </CardTitle>
         <CardDescription>
-          Test the civic AI pipeline by manually submitting citizen input data.
-          Make sure to configure VITE_N8N_WEBHOOK_URL in your .env file.
+          Use this form to send a sample civic issue through the system and create a test submission in the dashboard.
         </CardDescription>
       </CardHeader>
       <CardContent>

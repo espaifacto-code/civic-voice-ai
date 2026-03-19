@@ -138,31 +138,43 @@ export default function Dashboard() {
 
   if (isLoading) return <div className="flex min-h-[50vh] items-center justify-center text-muted-foreground">Loading data…</div>;
 
-  // Professional civic palette — blue/indigo/teal family
+  // Modern palette — vivid but balanced
   const COLORS = [
-    "#1d4ed8", // blue-700
-    "#2563eb", // blue-600
-    "#3b82f6", // blue-500
-    "#0ea5e9", // sky-500
-    "#0891b2", // cyan-600
-    "#0d9488", // teal-600
-    "#4f46e5", // indigo-600
-    "#6366f1", // indigo-500
+    "#fb923c", // orange-400  (Under Review / Environment)
+    "#34d399", // emerald-400 (Approved / Mobility)
+    "#818cf8", // indigo-400  (Safety)
+    "#f472b6", // pink-400    (Education)
+    "#38bdf8", // sky-400     (Health)
+    "#fbbf24", // amber-400   (Community)
+    "#a78bfa", // violet-400  (Public Space)
+    "#4ade80", // green-400   (Economy)
   ];
+
+  const ISSUE_COLORS = [
+    "#14b8a6", // teal
+    "#0ea5e9", // sky
+    "#8b5cf6", // violet
+    "#f97316", // orange
+    "#eab308", // yellow
+    "#ef4444", // red
+    "#6366f1", // indigo
+    "#22c55e", // green
+  ];
+
 
   // Vertical gradient (top→bottom) for pie/area/radar charts
   const renderGradient = (id, color) => (
     <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-      <stop offset="5%" stopColor={color} stopOpacity={0.85} />
-      <stop offset="95%" stopColor={color} stopOpacity={0.35} />
+      <stop offset="5%" stopColor={color} stopOpacity={0.9} />
+      <stop offset="95%" stopColor={color} stopOpacity={0.45} />
     </linearGradient>
   );
 
   // Horizontal gradient (left→right) for horizontal bar chart
   const renderBarGradient = (id, color) => (
     <linearGradient id={id} x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stopColor={color} stopOpacity={1} />
-      <stop offset="100%" stopColor={color} stopOpacity={0.55} />
+      <stop offset="0%" stopColor={color} stopOpacity={0.95} />
+      <stop offset="100%" stopColor={color} stopOpacity={0.5} />
     </linearGradient>
   );
 
@@ -186,7 +198,7 @@ export default function Dashboard() {
       )}
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-4 rounded-2xl border border-slate-200/80 bg-white/80 p-1 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="trends">Trends</TabsTrigger>
@@ -196,7 +208,7 @@ export default function Dashboard() {
         <TabsContent value="overview" className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Issue Categories */}
-            <Card>
+            <Card className="border-slate-200/80 bg-gradient-to-br from-white via-cyan-50/25 to-slate-50 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/15">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Target className="h-5 w-5" />
@@ -208,18 +220,18 @@ export default function Dashboard() {
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={issueData} layout="vertical" margin={{ left: 20, right: 20, top: 20, bottom: 20 }}>
                     <defs>
-                      {COLORS.map((color, idx) => renderBarGradient(`bar-gradient-${idx}`, color))}
+                      {ISSUE_COLORS.map((color, idx) => renderBarGradient(`bar-gradient-${idx}`, color))}
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                     <XAxis type="number" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
                     <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#475569' }} width={100} axisLine={false} tickLine={false} />
                     <Tooltip
-                      contentStyle={{ background: '#fff', borderRadius: 8, fontSize: 13, border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                      contentStyle={{ background: '#f8fafc', borderRadius: 12, fontSize: 13, border: '1px solid #cbd5e1', boxShadow: '0 12px 28px -12px rgb(0 0 0 / 0.2)' }}
                       cursor={{ fill: '#f8fafc' }}
                     />
                     <Bar dataKey="count" radius={[0, 6, 6, 0]} isAnimationActive={true}>
                       {issueData.map((_, idx) => (
-                        <Cell key={idx} fill={`url(#bar-gradient-${idx % COLORS.length})`} />
+                        <Cell key={idx} fill={`url(#bar-gradient-${idx % ISSUE_COLORS.length})`} />
                       ))}
                     </Bar>
                   </BarChart>
@@ -228,7 +240,7 @@ export default function Dashboard() {
             </Card>
 
             {/* Status Distribution */}
-            <Card>
+            <Card className="border-slate-200/80 bg-gradient-to-br from-white via-indigo-50/20 to-amber-50/20 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/15">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5" />
@@ -256,7 +268,7 @@ export default function Dashboard() {
                         <Cell key={`cell-${index}`} fill={`url(#pie-gradient-${index % COLORS.length})`} />
                       ))}
                     </Pie>
-                    <Tooltip contentStyle={{ background: '#fff', borderRadius: 8, fontSize: 13 }} />
+                    <Tooltip contentStyle={{ background: '#f8fafc', borderRadius: 12, fontSize: 13, border: '1px solid #cbd5e1' }} />
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="flex justify-center gap-4 mt-4">
@@ -275,7 +287,7 @@ export default function Dashboard() {
           </div>
 
           {/* Impact Assessment Radar */}
-          <Card>
+          <Card className="border-slate-200/80 bg-gradient-to-br from-white via-indigo-50/20 to-cyan-50/15 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/15">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5" />
@@ -286,7 +298,7 @@ export default function Dashboard() {
             <CardContent>
               <ResponsiveContainer width="100%" height={400}>
                 <RadarChart data={impactData} outerRadius={150}>
-                  <PolarGrid stroke="#e5e7eb" />
+                  <PolarGrid stroke="#cbd5e1" />
                   <PolarAngleAxis dataKey="metric" tick={{ fontSize: 13, fill: '#334155' }} />
                   <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fontSize: 11, fill: '#64748b' }} />
                   <Radar
@@ -295,9 +307,9 @@ export default function Dashboard() {
                     stroke="#818cf8"
                     fill="#818cf8"
                     fillOpacity={0.25}
-                    strokeWidth={3}
+                    strokeWidth={2.5}
                   />
-                  <Tooltip contentStyle={{ background: '#fff', borderRadius: 8, fontSize: 13 }} />
+                  <Tooltip contentStyle={{ background: '#f8fafc', borderRadius: 12, fontSize: 13, border: '1px solid #cbd5e1' }} />
                 </RadarChart>
               </ResponsiveContainer>
             </CardContent>
@@ -307,7 +319,7 @@ export default function Dashboard() {
         <TabsContent value="analytics" className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-[2fr_3fr]">
             {/* Submissions List */}
-            <Card>
+            <Card className="border-slate-200/80 bg-gradient-to-br from-white to-slate-50 dark:border-slate-800 dark:from-slate-900 dark:to-slate-900">
               <CardHeader>
                 <CardTitle>Recent Submissions</CardTitle>
                 <CardDescription>Click a row to inspect it</CardDescription>
@@ -318,7 +330,7 @@ export default function Dashboard() {
                     <div
                       key={record.id}
                       onClick={() => setSelectedId(selectedId === record.id ? null : record.id)}
-                      className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors hover:bg-muted/50 ${selectedId === record.id ? 'border-primary bg-muted/40' : ''}`}
+                      className={`flex items-center justify-between rounded-xl border p-3 cursor-pointer transition-all hover:bg-muted/50 ${selectedId === record.id ? 'border-cyan-300 bg-cyan-50/70 shadow-sm dark:border-cyan-700 dark:bg-cyan-950/20' : 'border-slate-200/80 dark:border-slate-800'}`}
                     >
                       <div className="flex-1 min-w-0 mr-2">
                         <p className="font-medium text-sm truncate">{record.issue || 'General Issue'}</p>
@@ -339,7 +351,7 @@ export default function Dashboard() {
             </Card>
 
             {/* Detail Panel — overall stats by default, full submission detail when selected */}
-            <Card>
+            <Card className="border-slate-200/80 bg-gradient-to-br from-white via-slate-50 to-amber-50/10 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
               {(() => {
                 const selected = sorted.find(r => r.id === selectedId);
 
@@ -355,19 +367,19 @@ export default function Dashboard() {
                         {metrics && (
                           <>
                             <div className="grid grid-cols-2 gap-4">
-                              <div className="border rounded-lg p-4 text-center">
+                              <div className="rounded-xl border border-cyan-200/70 bg-cyan-50/60 p-4 text-center dark:border-cyan-900/60 dark:bg-cyan-950/20">
                                 <p className="text-2xl font-bold">{metrics.total}</p>
                                 <p className="text-xs text-muted-foreground mt-1">Total Processed</p>
                               </div>
-                              <div className="border rounded-lg p-4 text-center">
+                              <div className="rounded-xl border border-indigo-200/70 bg-indigo-50/60 p-4 text-center dark:border-indigo-900/60 dark:bg-indigo-950/20">
                                 <p className="text-2xl font-bold">{metrics.approvalRate}%</p>
                                 <p className="text-xs text-muted-foreground mt-1">Approval Rate</p>
                               </div>
-                              <div className="border rounded-lg p-4 text-center">
+                              <div className="rounded-xl border border-teal-200/70 bg-teal-50/60 p-4 text-center dark:border-teal-900/60 dark:bg-teal-950/20">
                                 <p className="text-2xl font-bold text-green-600">{metrics.approved}</p>
                                 <p className="text-xs text-muted-foreground mt-1">Approved</p>
                               </div>
-                              <div className="border rounded-lg p-4 text-center">
+                              <div className="rounded-xl border border-amber-200/70 bg-amber-50/60 p-4 text-center dark:border-amber-900/60 dark:bg-amber-950/20">
                                 <p className="text-2xl font-bold text-yellow-600">{metrics.revision}</p>
                                 <p className="text-xs text-muted-foreground mt-1">Under Review</p>
                               </div>
@@ -384,7 +396,7 @@ export default function Dashboard() {
                                   <div key={label} className="flex items-center gap-3">
                                     <span className="text-sm w-28 shrink-0">{label}</span>
                                     <div className="flex-1 bg-muted rounded-full h-2">
-                                      <div className="bg-primary h-2 rounded-full" style={{ width: `${(parseFloat(value) / 10) * 100}%` }} />
+                                      <div className="h-2 rounded-full bg-gradient-to-r from-cyan-600 via-indigo-600 to-amber-600" style={{ width: `${(parseFloat(value) / 10) * 100}%` }} />
                                     </div>
                                     <span className="text-sm font-bold w-8 text-right">{value}</span>
                                   </div>
@@ -430,7 +442,7 @@ export default function Dashboard() {
                               { label: 'Inclusivity', value: selected.avg_inclusivity },
                               { label: 'Sustainability', value: selected.avg_sustainability },
                             ].map(({ label, value }) => value != null && (
-                              <div key={label} className="border rounded-lg p-3 flex items-center justify-between">
+                              <div key={label} className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white/80 p-3 dark:border-slate-800 dark:bg-slate-900/60">
                                 <span className="text-xs text-muted-foreground">{label}</span>
                                 <span className="text-sm font-bold">{value.toFixed(1)}<span className="text-xs font-normal text-muted-foreground">/10</span></span>
                               </div>
@@ -450,7 +462,7 @@ export default function Dashboard() {
                         ) : (
                           <div className="space-y-3">
                             {proposals.map((p: any, idx: number) => (
-                              <div key={idx} className="border rounded-lg p-3 space-y-1.5">
+                              <div key={idx} className="space-y-1.5 rounded-xl border border-slate-200/80 bg-white/80 p-3 dark:border-slate-800 dark:bg-slate-900/60">
                                 <p className="font-semibold text-sm">{p.title || `Proposal ${idx + 1}`}</p>
                                 {p.solution && <p className="text-xs text-muted-foreground">{p.solution}</p>}
                                 {Array.isArray(p.implementation_steps) && p.implementation_steps.length > 0 && (
@@ -478,7 +490,7 @@ export default function Dashboard() {
 
         <TabsContent value="trends" className="space-y-6">
           {/* Activity Timeline */}
-          <Card>
+          <Card className="border-slate-200/80 bg-gradient-to-br from-white via-cyan-50/20 to-slate-50 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/15">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Activity className="h-5 w-5" />
@@ -490,19 +502,19 @@ export default function Dashboard() {
               <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={timelineData}>
                   <defs>
-                    {renderGradient('area-gradient', '#22d3ee')}
+                    {renderGradient('area-gradient', '#34d399')}
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                   <XAxis dataKey="date" tick={{ fontSize: 12 }} axisLine={false} />
                   <YAxis tick={{ fontSize: 12 }} axisLine={false} />
-                  <Tooltip contentStyle={{ background: '#fff', borderRadius: 8, fontSize: 13 }} />
+                  <Tooltip contentStyle={{ background: '#f8fafc', borderRadius: 12, fontSize: 13, border: '1px solid #cbd5e1' }} />
                   <Area
                     type="monotone"
                     dataKey="count"
-                    stroke="#22d3ee"
+                    stroke="#34d399"
                     fill="url(#area-gradient)"
-                    fillOpacity={0.5}
-                    strokeWidth={3}
+                    fillOpacity={0.6}
+                    strokeWidth={2.5}
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -511,7 +523,7 @@ export default function Dashboard() {
 
           {/* Impact Trends */}
           <div className="grid gap-6 lg:grid-cols-2">
-            <Card>
+            <Card className="border-slate-200/80 bg-gradient-to-br from-white via-amber-50/20 to-stone-50 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/15">
               <CardHeader>
                 <CardTitle>Impact Score Distribution</CardTitle>
                 <CardDescription>How proposals score across different criteria</CardDescription>
@@ -520,12 +532,12 @@ export default function Dashboard() {
                 <ResponsiveContainer width="100%" height={250}>
                   <ComposedChart data={impactData}>
                     <defs>
-                      {renderGradient('impact-bar-gradient', '#818cf8')}
+                      {renderGradient('impact-bar-gradient', '#fb923c')}
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis dataKey="metric" tick={{ fontSize: 12 }} axisLine={false} />
                     <YAxis domain={[0, 10]} tick={{ fontSize: 12 }} axisLine={false} />
-                    <Tooltip contentStyle={{ background: '#fff', borderRadius: 8, fontSize: 13 }} />
+                    <Tooltip contentStyle={{ background: '#f8fafc', borderRadius: 12, fontSize: 13, border: '1px solid #cbd5e1' }} />
                     <Bar dataKey="value" fill="url(#impact-bar-gradient)" radius={[8, 8, 0, 0]} />
                     <Line type="monotone" dataKey="fullMark" stroke="#a3a3a3" strokeDasharray="5 5" />
                   </ComposedChart>
@@ -533,7 +545,7 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-slate-200/80 bg-gradient-to-br from-white via-slate-50 to-indigo-50/15 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/15">
               <CardHeader>
                 <CardTitle>Quality Metrics</CardTitle>
                 <CardDescription>Average scores for approved proposals</CardDescription>
@@ -545,7 +557,7 @@ export default function Dashboard() {
                     <div className="flex items-center gap-2">
                       <div className="w-24 bg-muted rounded-full h-2">
                         <div
-                          className="bg-primary h-2 rounded-full"
+                          className="h-2 rounded-full bg-gradient-to-r from-cyan-600 via-indigo-600 to-amber-600"
                           style={{ width: `${(item.value / 10) * 100}%` }}
                         />
                       </div>
