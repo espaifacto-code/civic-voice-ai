@@ -129,7 +129,7 @@ const Index = () => {
                 </Link>
               </Button>
 
-              <Button variant="outline" size="lg" asChild className="border border-white/20 text-white hover:bg-white/10 hover:border-white/40 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-semibold text-base px-8 bg-white/[0.04] backdrop-blur-sm">
+              <Button variant="outline" size="lg" asChild className="border border-cyan-300/30 bg-white/[0.06] text-white shadow-lg backdrop-blur-sm transition-all duration-300 transform hover:scale-105 hover:border-cyan-300/70 hover:bg-cyan-400/18 hover:text-white hover:shadow-[0_10px_30px_rgba(34,211,238,0.22)] font-semibold text-base px-8">
                 <a href="https://tally.so/r/Y5OA8q" target="_blank" rel="noopener noreferrer">
                   <Users className="mr-2 h-5 w-5" />
                   Submit Citizen Input
