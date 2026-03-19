@@ -17,24 +17,59 @@ const Index = () => {
       </div>
 
       {/* Hero Section */}
-      <div className="relative flex flex-col items-center justify-center py-20 px-4 min-h-screen">
-        <div className="text-center max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-1000">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 shadow-lg animate-in zoom-in-50 delay-300">
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        @keyframes glow {
+          0%, 100% { filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.3)); }
+          50% { filter: drop-shadow(0 0 40px rgba(6, 182, 212, 0.5)); }
+        }
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .civic-hero-bg {
+          animation: float 6s ease-in-out infinite;
+        }
+        .civic-glow {
+          animation: glow 4s ease-in-out infinite;
+        }
+      `}</style>
+      
+      <div className="relative flex flex-col items-center justify-center py-20 px-4 min-h-screen overflow-hidden">
+        {/* SVG Background with Animation */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-60 dark:opacity-40 civic-glow">
+          <img
+            src="/civic-voice-ai/og-image.svg"
+            alt="Background"
+            className="w-full h-full object-cover object-center civic-hero-bg"
+            loading="lazy"
+          />
+        </div>
+
+        {/* Overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/20 to-white/40 dark:from-slate-900/60 dark:via-slate-900/40 dark:to-slate-900/60 backdrop-blur-sm"></div>
+
+        {/* Content */}
+        <div className="relative z-10 text-center max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 shadow-lg animate-in zoom-in-50 delay-300 backdrop-blur-sm">
             <Sparkles className="h-4 w-4" />
             Mozilla Democracy & AI Incubator
           </div>
 
-          <h1 className="mb-6 text-6xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-slate-900 via-blue-900 to-slate-800 dark:from-white dark:via-blue-200 dark:to-white bg-clip-text text-transparent animate-in slide-in-from-left-4 delay-500">
+          <h1 className="mb-6 text-6xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 dark:from-white dark:via-blue-100 dark:to-white bg-clip-text text-transparent animate-in slide-in-from-left-4 delay-500 drop-shadow-lg">
             Civic Voice AI
           </h1>
 
-          <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-10 leading-relaxed animate-in slide-in-from-right-4 delay-700">
+          <p className="text-xl md:text-2xl text-slate-700 dark:text-slate-100 mb-10 leading-relaxed animate-in slide-in-from-right-4 delay-700 drop-shadow-md font-medium">
             AI-assisted civic participation platform<br />
-            <span className="text-blue-600 dark:text-blue-400 font-semibold">transforming citizen input into actionable policy proposals</span>
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent font-bold">transforming citizen input into actionable policy proposals</span>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in zoom-in-95 delay-1000">
-            <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-white font-semibold">
               <Link to="/dashboard">
                 <BarChart3 className="mr-2 h-5 w-5" />
                 Explore Dashboard
@@ -42,22 +77,13 @@ const Index = () => {
               </Link>
             </Button>
 
-            <Button variant="outline" size="lg" asChild className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+            <Button variant="outline" size="lg" asChild className="border-2 border-blue-600 text-blue-600 dark:text-blue-300 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-semibold bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
               <a href="https://tally.so/r/Y5OA8q" target="_blank" rel="noopener noreferrer">
                 <Users className="mr-2 h-5 w-5" />
                 Submit Citizen Input
                 <Zap className="ml-2 h-4 w-4" />
               </a>
             </Button>
-          </div>
-
-          <div className="mt-10 animate-in fade-in delay-[1200ms]">
-            <img
-              src="/civic-voice-ai/og-image.svg"
-              alt="Participatory Civic AI preview"
-              className="mx-auto w-full max-w-4xl rounded-2xl border border-slate-200/70 shadow-2xl"
-              loading="lazy"
-            />
           </div>
         </div>
       </div>
