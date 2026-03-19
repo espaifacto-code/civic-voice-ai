@@ -50,6 +50,15 @@ const Index = () => {
               </a>
             </Button>
           </div>
+
+          <div className="mt-10 animate-in fade-in delay-[1200ms]">
+            <img
+              src="/civic-voice-ai/og-image.svg"
+              alt="Participatory Civic AI preview"
+              className="mx-auto w-full max-w-4xl rounded-2xl border border-slate-200/70 shadow-2xl"
+              loading="lazy"
+            />
+          </div>
         </div>
       </div>
 
