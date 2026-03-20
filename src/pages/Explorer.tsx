@@ -91,7 +91,7 @@ export default function Explorer() {
         {selected && (
           <div className="lg:hidden fixed inset-0 z-40 flex flex-col justify-end">
             <div className="absolute inset-0 bg-black/40" onClick={() => setSelected(null)} />
-            <div className="relative z-50 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-background shadow-xl">
+            <div className="relative z-50 max-h-[80vh] w-full overflow-x-hidden overflow-y-auto rounded-t-2xl bg-background shadow-xl">
               <div className="sticky top-0 flex items-center justify-between border-b bg-background/95 backdrop-blur px-4 py-3">
                 <p className="text-sm font-semibold truncate pr-4">{selected.issue}</p>
                 <button onClick={() => setSelected(null)} className="shrink-0 rounded-lg p-1 text-muted-foreground hover:bg-secondary">
