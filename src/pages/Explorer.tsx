@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useCivicRecords } from "@/hooks/useCivicRecords";
 import StatusBadge from "@/components/dashboard/StatusBadge";
 import { format } from "date-fns";
-import { ChevronRight, CheckCircle2, AlertTriangle, Shield, X } from "lucide-react";
+import { ChevronRight, ChevronLeft, CheckCircle2, AlertTriangle, Shield, X } from "lucide-react";
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
 } from "recharts";
@@ -61,8 +61,8 @@ export default function Explorer() {
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[35%_1fr]">
-        {/* List */}
-        <div className="space-y-2 overflow-y-auto lg:max-h-[calc(100vh-200px)]">
+        {/* List — hidden on mobile when a record is selected */}
+        <div className={`space-y-2 overflow-y-auto lg:max-h-[calc(100vh-200px)] ${selected ? 'hidden lg:block' : 'block'}`}>
           {filtered.map((r) => (
             <button
               key={r.id}
@@ -89,6 +89,15 @@ export default function Explorer() {
         {/* Detail */}
         {selected ? (
           <div className="space-y-6 overflow-y-auto lg:max-h-[calc(100vh-200px)]">
+            {/* Back button — mobile only */}
+            <button
+              onClick={() => setSelected(null)}
+              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors lg:hidden"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Back to list
+            </button>
+
             {/* Header */}
             <div className="rounded-xl bg-card p-6 shadow-card">
               <div className="flex items-start justify-between">
