@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useCivicRecords } from "@/hooks/useCivicRecords";
 import StatusBadge from "@/components/dashboard/StatusBadge";
 import { format } from "date-fns";
-import { ChevronRight, ChevronLeft, CheckCircle2, AlertTriangle, Shield, X } from "lucide-react";
+import { ChevronRight, CheckCircle2, AlertTriangle, Shield, X } from "lucide-react";
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
 } from "recharts";
@@ -61,8 +61,8 @@ export default function Explorer() {
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[35%_1fr]">
-        {/* List — hidden on mobile when a record is selected */}
-        <div className={`space-y-2 overflow-y-auto lg:max-h-[calc(100vh-200px)] ${selected ? 'hidden lg:block' : 'block'}`}>
+        {/* List — always visible */}
+        <div className="space-y-2 overflow-y-auto lg:max-h-[calc(100vh-200px)]">
           {filtered.map((r) => (
             <button
               key={r.id}
@@ -87,17 +87,50 @@ export default function Explorer() {
         </div>
 
         {/* Detail */}
-        {selected ? (
-          <div className="space-y-6 overflow-y-auto lg:max-h-[calc(100vh-200px)]">
-            {/* Back button — mobile only */}
-            <button
-              onClick={() => setSelected(null)}
-              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors lg:hidden"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Back to list
-            </button>
+        {/* Mobile bottom sheet overlay */}
+        {selected && (
+          <div className="lg:hidden fixed inset-0 z-40 flex flex-col justify-end">
+            <div className="absolute inset-0 bg-black/40" onClick={() => setSelected(null)} />
+            <div className="relative z-50 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-background shadow-xl">
+              <div className="sticky top-0 flex items-center justify-between border-b bg-background/95 backdrop-blur px-4 py-3">
+                <p className="text-sm font-semibold truncate pr-4">{selected.issue}</p>
+                <button onClick={() => setSelected(null)} className="shrink-0 rounded-lg p-1 text-muted-foreground hover:bg-secondary">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              <div className="p-4 space-y-4">
+                {(selected.proposals as any[] ?? []).map((p: any, i: number) => (
+                  <div key={i} className="rounded-xl bg-primary/[0.03] p-4 space-y-3">
+                    <h3 className="font-semibold">{p.title}</h3>
+                    {p.solution && <p className="text-sm text-muted-foreground">{p.solution}</p>}
+                    {Array.isArray(p.implementation_steps) && p.implementation_steps.length > 0 && (
+                      <ol className="space-y-1">
+                        {p.implementation_steps.map((step: string, j: number) => (
+                          <li key={j} className="flex gap-2 text-sm">
+                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">{j + 1}</span>
+                            {step}
+                          </li>
+                        ))}
+                      </ol>
+                    )}
+                    {p.expected_impact_6m && <p className="text-xs text-primary font-medium">Impact: {p.expected_impact_6m}</p>}
+                  </div>
+                ))}
+                <div className={`rounded-xl p-4 ${selected.approved ? "bg-emerald-50 border border-emerald-200" : "bg-amber-50 border border-amber-200"}`}>
+                  <p className={`text-sm font-semibold ${selected.approved ? "text-emerald-800" : "text-amber-800"}`}>
+                    {selected.approved ? "✓ Approved by Ethical Review" : "⚠ Requires Revision"}
+                  </p>
+                  {!selected.approved && Array.isArray(selected.ethical_issues) && (selected.ethical_issues as string[]).map((issue, i) => (
+                    <p key={i} className="mt-1 text-xs text-amber-700">{issue}</p>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
+        {selected ? (
+          <div className="space-y-6 overflow-y-auto lg:max-h-[calc(100vh-200px)] hidden lg:block">
             {/* Header */}
             <div className="rounded-xl bg-card p-6 shadow-card">
               <div className="flex items-start justify-between">
@@ -219,7 +252,7 @@ export default function Explorer() {
             </footer>
           </div>
         ) : (
-          <div className="flex min-h-[300px] items-center justify-center rounded-xl bg-card text-sm text-muted-foreground shadow-card">
+          <div className="hidden lg:flex min-h-[300px] items-center justify-center rounded-xl bg-card text-sm text-muted-foreground shadow-card">
             Select a record to view proposal details.
           </div>
         )}
