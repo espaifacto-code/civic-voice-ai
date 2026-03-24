@@ -4,9 +4,15 @@ import { supabase } from "@/integrations/supabase/client";
 import type { CivicRecord } from "@/types/civic";
 //ss
 export function useCivicRecords() {
+  const isConfigured = !!(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
+  
   const query = useQuery({
     queryKey: ["civic-records"],
     queryFn: async () => {
+      if (!isConfigured) {
+        console.warn("Supabase not configured, returning empty records");
+        return [];
+      }
       const { data, error } = await supabase
         .from("civic_records")
         .select("*")
@@ -23,6 +29,8 @@ export function useCivicRecords() {
 
   const queryClient = useQueryClient();
   useEffect(() => {
+    if (!isConfigured) return;
+    
     const channel = supabase
       .channel("dashboard-changes")
       .on(
@@ -38,7 +46,7 @@ export function useCivicRecords() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [queryClient]);
+  }, [queryClient, isConfigured]);
 
   return query;
 }
