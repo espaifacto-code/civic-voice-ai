@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useCivicRecords } from "@/hooks/useCivicRecords";
 import StatusBadge from "@/components/dashboard/StatusBadge";
 import { format } from "date-fns";
@@ -27,6 +27,17 @@ export default function Explorer() {
       return true;
     });
   }, [records, areaFilter, issueFilter, ethicalFilter]);
+
+  useEffect(() => {
+    if (!filtered.length) {
+      setSelected(null);
+      return;
+    }
+
+    if (!selected || !filtered.some((record) => record.id === selected.id)) {
+      setSelected(filtered[0]);
+    }
+  }, [filtered, selected]);
 
   const impactData = selected
     ? [
@@ -72,11 +83,11 @@ export default function Explorer() {
               }`}
             >
               <div className="flex items-center justify-between">
-                <h3 className="font-medium text-foreground text-sm">{r.issue}</h3>
+                <h3 className="font-medium text-foreground text-sm">{r.issue ?? "Untitled civic issue"}</h3>
                 <ChevronRight className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-                <span>{r.area}</span>
+                <span>{r.area ?? "Uncategorized area"}</span>
                 <span>·</span>
                 <span>{format(new Date(r.created_at), "MMM d, yyyy")}</span>
               </div>
@@ -93,7 +104,7 @@ export default function Explorer() {
             <div className="absolute inset-0 bg-black/40" onClick={() => setSelected(null)} />
             <div className="relative z-50 max-h-[80vh] w-screen max-w-full overflow-x-hidden overflow-y-auto rounded-t-2xl bg-background shadow-xl">
               <div className="sticky top-0 flex items-center justify-between border-b bg-background/95 backdrop-blur px-4 py-3">
-                <p className="text-sm font-semibold line-clamp-2 pr-4 break-words">{selected.issue}</p>
+                <p className="text-sm font-semibold line-clamp-2 pr-4 break-words">{selected.issue ?? "Untitled civic issue"}</p>
                 <button onClick={() => setSelected(null)} className="shrink-0 rounded-lg p-1 text-muted-foreground hover:bg-secondary">
                   <X className="h-5 w-5" />
                 </button>
@@ -101,8 +112,8 @@ export default function Explorer() {
               <div className="p-4 space-y-4 w-full min-w-0">
                 {/* Meta */}
                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                  {selected.area && <span>Area: <strong className="text-foreground">{selected.area}</strong></span>}
-                  {selected.participant && <span>Participant: <strong className="text-foreground">{selected.participant}</strong></span>}
+                  <span>Area: <strong className="text-foreground">{selected.area ?? "Uncategorized area"}</strong></span>
+                  <span>Participant: <strong className="text-foreground">{selected.participant ?? "Anonymous"}</strong></span>
                   <span>{format(new Date(selected.created_at), "MMM d, yyyy")}</span>
                 </div>
 
@@ -165,6 +176,12 @@ export default function Explorer() {
                   </div>
                 ))}
 
+                {!(selected.proposals as any[] ?? []).length && (
+                  <div className="rounded-xl border border-dashed p-4 text-sm text-muted-foreground">
+                    No proposal details are stored for this record yet.
+                  </div>
+                )}
+
                 {/* Ethical review */}
                 <div className={`rounded-xl p-4 ${selected.approved ? "bg-emerald-50 border border-emerald-200" : "bg-amber-50 border border-amber-200"}`}>
                   <p className={`text-sm font-semibold ${selected.approved ? "text-emerald-800" : "text-amber-800"}`}>
@@ -188,10 +205,10 @@ export default function Explorer() {
             <div className="rounded-xl bg-card p-6 shadow-card">
               <div className="flex items-start justify-between">
                 <div>
-                  <h2 className="text-xl font-semibold tracking-tight">{selected.issue}</h2>
+                  <h2 className="text-xl font-semibold tracking-tight">{selected.issue ?? "Untitled civic issue"}</h2>
                   <div className="mt-2 flex flex-wrap gap-3 text-sm text-muted-foreground">
-                    <span>Area: <strong className="text-foreground">{selected.area}</strong></span>
-                    <span>Participant: <strong className="text-foreground">{selected.participant}</strong></span>
+                    <span>Area: <strong className="text-foreground">{selected.area ?? "Uncategorized area"}</strong></span>
+                    <span>Participant: <strong className="text-foreground">{selected.participant ?? "Anonymous"}</strong></span>
                     <span>Date: <strong className="font-mono-tabular text-foreground">{format(new Date(selected.created_at), "MMM d, yyyy")}</strong></span>
                   </div>
                 </div>
@@ -238,6 +255,12 @@ export default function Explorer() {
                 </div>
               </div>
             ))}
+
+            {!(selected.proposals as any[] ?? []).length && (
+              <div className="rounded-xl border border-dashed bg-card p-6 text-sm text-muted-foreground shadow-card">
+                No proposal details are stored for this record yet.
+              </div>
+            )}
 
             {/* Ethical Review */}
             <div className={`rounded-xl p-6 shadow-card ${selected.approved ? "bg-emerald-50 border border-emerald-200" : "bg-amber-50 border border-amber-200"}`}>
