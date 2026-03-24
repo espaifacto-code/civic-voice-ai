@@ -14,7 +14,7 @@ import NotFound from "./pages/NotFound";
 import { Navigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Lazy load the Transparency page for better performance
+// Lszy load the Transparency page for better performance
 const Transparency = lazy(() => import("@/pages/Transparency"));
 
 // Loading component for lazy-loaded pages
