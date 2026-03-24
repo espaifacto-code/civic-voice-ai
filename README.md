@@ -251,6 +251,22 @@ npm install
 npm run dev
 ```
 
+### Environment Setup
+
+The dashboard and explorer need these public Vite variables in your local `.env` file or deployment environment:
+
+```bash
+VITE_SUPABASE_URL=your-supabase-project-url
+VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-anon-key
+```
+
+The manual trigger on the dashboard now uses a Supabase Edge Function proxy instead of calling n8n directly from the browser. Set the n8n webhook as a Supabase function secret:
+
+```bash
+supabase secrets set N8N_WEBHOOK_URL=https://your-n8n-instance/webhook/dashboard-trigger
+supabase functions deploy manual-trigger
+```
+
 ### Build for Production
 ```bash
 npm run build

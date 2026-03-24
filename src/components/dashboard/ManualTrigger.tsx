@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Play, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ManualTriggerProps {
   onTrigger?: (data: any) => void;
@@ -17,7 +17,6 @@ interface ManualTriggerProps {
 }
 
 export default function ManualTrigger({ onTrigger, onTriggerSuccess }: ManualTriggerProps) {
-  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [formData, setFormData] = useState({
@@ -50,13 +49,6 @@ export default function ManualTrigger({ onTrigger, onTriggerSuccess }: ManualTri
     setStatus('idle');
 
     try {
-      // Call n8n webhook directly
-      const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL;
-
-      if (!webhookUrl || webhookUrl.includes('your-n8n-instance.com')) {
-        throw new Error('n8n webhook URL not configured. Please set VITE_N8N_WEBHOOK_URL in your .env file.');
-      }
-
       const responses = [
         { question: "What should we call you?", answer: "Dashboard User" },
         { question: "Email (optional)", answer: "" },
@@ -84,47 +76,45 @@ export default function ManualTrigger({ onTrigger, onTriggerSuccess }: ManualTri
         pilot_topic: formData.issue || "civic participation",
       };
 
-      let response, result;
       try {
-        response = await fetch(webhookUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
+        const { data: result, error } = await supabase.functions.invoke('manual-trigger', {
+          body: payload,
         });
-        // Try to parse JSON, fallback to text
-        result = await response.json().catch(async () => ({ error: await response.text() }));
+
+        if (error) {
+          throw error;
+        }
+
+        if (result?.ok) {
+          setStatus('success');
+          toast({
+            title: "Workflow Triggered",
+            description: "The civic AI pipeline has been started. Check the dashboard for results.",
+          });
+          onTrigger?.({ ...formData, result: result.result });
+          onTriggerSuccess?.();
+        } else {
+          setStatus('error');
+          toast({
+            title: "Trigger Failed",
+            description:
+              (result && (result.error || result.result?.error || result.result?.message))
+                ? String(result.error || result.result?.error || result.result?.message)
+                : "There was an error triggering the workflow.",
+            variant: "destructive",
+          });
+        }
       } catch (err) {
         setStatus('error');
         setIsLoading(false);
         toast({
-          title: "Network Error",
-          description: (err instanceof Error ? err.message : String(err)) +
-            "\nCheck your network connection or CORS settings.",
+          title: "Trigger Error",
+          description:
+            (err instanceof Error ? err.message : String(err)) +
+            "\nCheck the Supabase function deployment and N8N_WEBHOOK_URL secret.",
           variant: "destructive",
         });
         return;
-      }
-
-      if (response.ok) {
-        setStatus('success');
-        toast({
-          title: "Workflow Triggered",
-          description: "The civic AI pipeline has been started. Check the dashboard for results.",
-        });
-        onTrigger?.({ ...formData, result });
-        onTriggerSuccess?.(); // Refresh dashboard data
-      } else {
-        setStatus('error');
-        toast({
-          title: "Trigger Failed",
-          description:
-            (result && (result.error || result.message))
-              ? String(result.error || result.message)
-              : `There was an error triggering the workflow.\nStatus: ${response.status} ${response.statusText}`,
-          variant: "destructive",
-        });
       }
     } finally {
       setIsLoading(false);
