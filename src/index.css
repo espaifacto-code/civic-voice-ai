@@ -96,3 +96,43 @@
     box-shadow: var(--shadow-card);
   }
 }
+
+/* Applied to all routes except landing for a softer, less-white surface treatment. */
+.subpage-theme {
+  --background: 205 60% 94%;
+  --card: 0 0% 100%;
+  --secondary: 204 40% 89%;
+  --muted: 204 38% 87%;
+}
+
+.subpage-shell {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 12% 14%, rgba(56, 189, 248, 0.22), transparent 28%),
+    radial-gradient(circle at 88% 10%, rgba(59, 130, 246, 0.18), transparent 24%),
+    radial-gradient(circle at 78% 86%, rgba(14, 165, 233, 0.14), transparent 30%),
+    linear-gradient(180deg, #eef7ff 0%, #e6f0fb 50%, #dceaf7 100%);
+}
+
+.subpage-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(148, 163, 184, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 30px 30px;
+  opacity: 0.65;
+}
+
+.subpage-theme .bg-card {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border-color: rgba(148, 163, 184, 0.32);
+}
+
+.subpage-theme header {
+  background-color: rgba(248, 252, 255, 0.8);
+  border-color: rgba(148, 163, 184, 0.3);
+  backdrop-filter: blur(10px);
+}
