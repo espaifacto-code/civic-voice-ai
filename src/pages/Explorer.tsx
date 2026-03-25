@@ -91,7 +91,7 @@ export default function Explorer() {
                 <span>·</span>
                 <span>{format(new Date(r.created_at), "MMM d, yyyy")}</span>
               </div>
-              <div className="mt-2"><StatusBadge status={r.status} /></div>
+              <div className="mt-2"><StatusBadge status={r.status} approved={r.approved} /></div>
             </button>
           ))}
           {!filtered.length && <p className="py-12 text-center text-sm text-muted-foreground">No records match your filters.</p>}

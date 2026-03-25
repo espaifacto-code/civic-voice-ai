@@ -161,6 +161,13 @@ export default function Dashboard() {
     "#22c55e", // green
   ];
 
+  const STATUS_COLORS: Record<string, string> = {
+    "Approved": "#34d399",
+    "Under Review": "#fb923c",
+  };
+
+  const getStatusColor = (name: string) => STATUS_COLORS[name] ?? "#94a3b8";
+
 
   // Vertical gradient (top→bottom) for pie/area/radar charts
   const renderGradient = (id, color) => (
@@ -252,7 +259,9 @@ export default function Dashboard() {
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <defs>
-                      {COLORS.map((color, idx) => renderGradient(`pie-gradient-${idx}`, color))}
+                      {Object.entries(STATUS_COLORS).map(([name, color]) => (
+                        renderGradient(`status-gradient-${name.toLowerCase().replace(/\s+/g, "-")}`, color)
+                      ))}
                     </defs>
                     <Pie
                       data={statusData}
@@ -265,18 +274,21 @@ export default function Dashboard() {
                       isAnimationActive={true}
                     >
                       {statusData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={`url(#pie-gradient-${index % COLORS.length})`} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={`url(#status-gradient-${entry.name.toLowerCase().replace(/\s+/g, "-")})`}
+                        />
                       ))}
                     </Pie>
                     <Tooltip contentStyle={{ background: '#f8fafc', borderRadius: 12, fontSize: 13, border: '1px solid #cbd5e1' }} />
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="flex justify-center gap-4 mt-4">
-                  {statusData.map((entry, index) => (
+                  {statusData.map((entry) => (
                     <div key={entry.name} className="flex items-center gap-2">
                       <div
                         className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                        style={{ backgroundColor: getStatusColor(entry.name) }}
                       />
                       <span className="text-sm">{entry.name}: {entry.value}</span>
                     </div>
@@ -340,7 +352,12 @@ export default function Dashboard() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        <Badge variant={record.approved ? "default" : "secondary"}>
+                        <Badge
+                          variant="outline"
+                          className={record.approved
+                            ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                            : "border-amber-200 bg-amber-50 text-amber-700"}
+                        >
                           {record.approved ? "Approved" : "Review"}
                         </Badge>
                       </div>
@@ -425,7 +442,12 @@ export default function Dashboard() {
                             · {format(new Date(selected.created_at), 'MMM dd, yyyy')}
                           </CardDescription>
                         </div>
-                        <Badge variant={selected.approved ? "default" : "secondary"} className="shrink-0">
+                        <Badge
+                          variant="outline"
+                          className={`shrink-0 ${selected.approved
+                            ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                            : "border-amber-200 bg-amber-50 text-amber-700"}`}
+                        >
                           {selected.approved ? "Approved" : "Under Review"}
                         </Badge>
                       </div>
