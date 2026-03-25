@@ -337,15 +337,15 @@ export default function Dashboard() {
                 <CardDescription>Click a row to inspect it</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
+                <div className="space-y-2 min-w-0">
                   {sorted.slice(0, 10).map((record) => (
                     <div
                       key={record.id}
                       onClick={() => setSelectedId(selectedId === record.id ? null : record.id)}
-                      className={`flex items-center justify-between rounded-xl border p-3 cursor-pointer transition-all hover:bg-muted/50 ${selectedId === record.id ? 'border-cyan-300 bg-cyan-50/70 shadow-sm dark:border-cyan-700 dark:bg-cyan-950/20' : 'border-slate-200/80 dark:border-slate-800'}`}
+                      className={`flex min-w-0 items-center justify-between rounded-xl border p-3 cursor-pointer transition-all hover:bg-muted/50 ${selectedId === record.id ? 'border-cyan-300 bg-cyan-50/70 shadow-sm dark:border-cyan-700 dark:bg-cyan-950/20' : 'border-slate-200/80 dark:border-slate-800'}`}
                     >
                       <div className="flex-1 min-w-0 mr-2">
-                        <p className="font-medium text-sm truncate">{record.issue || 'General Issue'}</p>
+                        <p className="font-medium text-sm break-words [overflow-wrap:anywhere]">{record.issue || 'General Issue'}</p>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-xs text-muted-foreground">{format(new Date(record.created_at), 'MMM dd, yyyy')}</span>
                           {record.area && <span className="text-xs text-muted-foreground">· {record.area}</span>}
@@ -435,8 +435,8 @@ export default function Dashboard() {
                     <CardHeader>
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <CardTitle className="text-base leading-snug">{selected.issue || 'General Issue'}</CardTitle>
-                          <CardDescription className="mt-1">
+                          <CardTitle className="text-base leading-snug break-words [overflow-wrap:anywhere]">{selected.issue || 'General Issue'}</CardTitle>
+                          <CardDescription className="mt-1 break-words [overflow-wrap:anywhere]">
                             {selected.area && <span className="mr-2">{selected.area}</span>}
                             {selected.participant && <span className="mr-2">· {selected.participant}</span>}
                             · {format(new Date(selected.created_at), 'MMM dd, yyyy')}
@@ -482,20 +482,20 @@ export default function Dashboard() {
                         {proposals.length === 0 ? (
                           <p className="text-sm text-muted-foreground">No proposals stored for this submission.</p>
                         ) : (
-                          <div className="space-y-3">
+                          <div className="space-y-3 min-w-0">
                             {proposals.map((p: any, idx: number) => (
-                              <div key={idx} className="space-y-1.5 rounded-xl border border-slate-200/80 bg-white/80 p-3 dark:border-slate-800 dark:bg-slate-900/60">
-                                <p className="font-semibold text-sm">{p.title || `Proposal ${idx + 1}`}</p>
-                                {p.solution && <p className="text-xs text-muted-foreground">{p.solution}</p>}
+                              <div key={idx} className="space-y-1.5 min-w-0 overflow-hidden rounded-xl border border-slate-200/80 bg-white/80 p-3 dark:border-slate-800 dark:bg-slate-900/60">
+                                <p className="font-semibold text-sm break-words [overflow-wrap:anywhere]">{p.title || `Proposal ${idx + 1}`}</p>
+                                {p.solution && <p className="text-xs text-muted-foreground break-words [overflow-wrap:anywhere]">{p.solution}</p>}
                                 {Array.isArray(p.implementation_steps) && p.implementation_steps.length > 0 && (
                                   <ul className="list-disc pl-4 space-y-0.5 mt-1">
                                     {p.implementation_steps.map((step: string, i: number) => (
-                                      <li key={i} className="text-xs">{step}</li>
+                                      <li key={i} className="text-xs break-words [overflow-wrap:anywhere]">{step}</li>
                                     ))}
                                   </ul>
                                 )}
                                 {p.expected_impact_6m && (
-                                  <p className="text-xs text-primary font-medium mt-1">Impact: {p.expected_impact_6m}</p>
+                                  <p className="text-xs text-primary font-medium mt-1 break-words [overflow-wrap:anywhere]">Impact: {p.expected_impact_6m}</p>
                                 )}
                               </div>
                             ))}
