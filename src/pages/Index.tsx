@@ -1,422 +1,600 @@
-// Update this page (the content is just a fallback if you fail to update the page)
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Database, Shield, Users, BarChart3, Webhook, FileText, CheckCircle, Lightbulb, Sparkles, Zap, Globe } from "lucide-react";
+import { ArrowRight, BarChart3, Users, Shield, Database, Lightbulb, FileText, CheckCircle, Webhook, Sparkles, Zap, Globe, ChevronRight } from "lucide-react";
 
-const Index = () => {
+/* ─────────────────────────────────────────────
+   Premium Civic Voice AI — Landing Page
+   Dark-first design, Space Grotesk headings,
+   bento grid, glass morphism, marquee ticker
+───────────────────────────────────────────── */
+
+const TICKER_ITEMS = [
+  "Participatory AI",
+  "Open Source",
+  "Democratic Accountability",
+  "Mozilla Incubator",
+  "Citizen-Centered",
+  "Ethical Governance",
+  "RAG Pipeline",
+  "Civic Innovation",
+  "Transparent AI",
+  "Common Praxis",
+];
+
+const ARCH_STEPS = [
+  { num: "01", icon: Webhook,    color: "#3b82f6", title: "Intake & Consent",     desc: "Captures citizen input via Tally forms or webhooks. Validates consent before processing." },
+  { num: "02", icon: FileText,   color: "#10b981", title: "Normalization",         desc: "Converts messy form responses into structured civic profiles with issues and priorities." },
+  { num: "03", icon: Database,   color: "#8b5cf6", title: "Context Retrieval",     desc: "Queries vector database of planning documents to ground proposals in real policy." },
+  { num: "04", icon: Lightbulb,  color: "#f59e0b", title: "Proposal Generation",   desc: "Creates multiple solution types and generates detailed, actionable proposal packages." },
+  { num: "05", icon: Shield,     color: "#ef4444", title: "Ethical Review",         desc: "AI governance layer checks for bias, exclusion, accessibility issues, and social fairness." },
+  { num: "06", icon: BarChart3,  color: "#06b6d4", title: "Impact Scoring",         desc: "Evaluates proposals across equity, sustainability, feasibility, and community support." },
+  { num: "07", icon: CheckCircle,color: "#22c55e", title: "Storage & Transparency", desc: "Stores results in Supabase for dashboard display. Creates citizen-facing explanations." },
+];
+
+const PRINCIPLES = [
+  { icon: Users,    title: "Citizen-Centered",   desc: "Begins with real participation, not institutional data", accent: "#3b82f6" },
+  { icon: Lightbulb,title: "Plural Solutions",    desc: "Generates multiple pathways instead of single answers",   accent: "#f59e0b" },
+  { icon: Shield,   title: "Ethical Governance",  desc: "Built-in AI accountability and bias detection",           accent: "#ef4444" },
+  { icon: BarChart3,title: "Public Transparency", desc: "All outputs auditable and explainable",                   accent: "#10b981" },
+];
+
+export default function Index() {
   const heroArtworkUrl = `${import.meta.env.BASE_URL}og-image.svg`;
 
   return (
-    <div className="min-h-screen">
-      {/* ── Hero Section ─ Dark cinematic hero with inline SVG elements ── */}
+    <div className="min-h-screen" style={{ fontFamily: "'Space Grotesk', 'Inter', sans-serif", background: "#050a14" }}>
+
+      {/* ════════════════════════════════════════
+          INLINE KEYFRAMES
+      ════════════════════════════════════════ */}
       <style>{`
-        @keyframes orbit1   { from { transform: rotate(0deg) translateX(180px) rotate(0deg); }   to { transform: rotate(360deg) translateX(180px) rotate(-360deg); } }
-        @keyframes orbit2   { from { transform: rotate(120deg) translateX(130px) rotate(-120deg); } to { transform: rotate(480deg) translateX(130px) rotate(-480deg); } }
-        @keyframes orbit3   { from { transform: rotate(240deg) translateX(80px) rotate(-240deg); }  to { transform: rotate(600deg) translateX(80px) rotate(-600deg); } }
-        @keyframes drift    { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
-        @keyframes fadeGrid { 0%,100% { opacity: .04; } 50% { opacity: .08; } }
-        @keyframes glowRing { 0%,100% { opacity: .08; transform: scale(1); } 50% { opacity: .18; transform: scale(1.06); } }
-        @keyframes nodeFloat { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(8px,-12px) scale(1.15); } 66% { transform: translate(-6px,8px) scale(.9); } }
-        @keyframes artworkDrift { 0%,100% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(-18px, -12px, 0) scale(1.02); } }
-        @keyframes sheenPulse { 0%,100% { opacity: .38; } 50% { opacity: .62; } }
-        .hero-grid      { animation: fadeGrid 6s ease-in-out infinite; }
-        .hero-ring      { animation: glowRing 5s ease-in-out infinite; }
-        .hero-ring-2    { animation: glowRing 7s ease-in-out infinite 1s; }
-        .hero-ring-3    { animation: glowRing 9s ease-in-out infinite 2s; }
-        .hero-node      { animation: nodeFloat 6s ease-in-out infinite; }
-        .hero-node-2    { animation: nodeFloat 5s ease-in-out infinite .8s; }
-        .hero-node-3    { animation: nodeFloat 7s ease-in-out infinite 1.6s; }
-        .hero-node-4    { animation: nodeFloat 4s ease-in-out infinite 2.4s; }
-        .hero-orbit-1   { animation: orbit1 20s linear infinite; }
-        .hero-orbit-2   { animation: orbit2 28s linear infinite; }
-        .hero-orbit-3   { animation: orbit3 16s linear infinite; }
-        .hero-accent-bar { animation: drift 4s ease-in-out infinite; }
-        .hero-artwork   { animation: artworkDrift 18s ease-in-out infinite; }
-        .hero-sheen     { animation: sheenPulse 6s ease-in-out infinite; }
+        @keyframes orbit1   { from { transform: rotate(0deg) translateX(200px) rotate(0deg); }   to { transform: rotate(360deg) translateX(200px) rotate(-360deg); } }
+        @keyframes orbit2   { from { transform: rotate(100deg) translateX(140px) rotate(-100deg); } to { transform: rotate(460deg) translateX(140px) rotate(-460deg); } }
+        @keyframes orbit3   { from { transform: rotate(230deg) translateX(88px) rotate(-230deg); }  to { transform: rotate(590deg) translateX(88px) rotate(-590deg); } }
+        @keyframes float    { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-22px); } }
+        @keyframes fadeGrid { 0%,100% { opacity:.03; } 50% { opacity:.07; } }
+        @keyframes glowPulse{ 0%,100% { opacity:.06; transform:scale(1); } 50% { opacity:.18; transform:scale(1.08); } }
+        @keyframes nodeFloat{ 0%,100% { transform:translate(0,0) scale(1); } 33% { transform:translate(10px,-14px) scale(1.18); } 66% { transform:translate(-7px,9px) scale(.88); } }
+        @keyframes shimmer  { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes scaleIn  { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
+        @keyframes lineGrow { from { width:0; } to { width:100%; } }
+        .anim-orbit1  { animation: orbit1 22s linear infinite; }
+        .anim-orbit2  { animation: orbit2 32s linear infinite; }
+        .anim-orbit3  { animation: orbit3 18s linear infinite; }
+        .anim-grid    { animation: fadeGrid 7s ease-in-out infinite; }
+        .anim-glow    { animation: glowPulse 5s ease-in-out infinite; }
+        .anim-glow2   { animation: glowPulse 7s ease-in-out infinite 1.5s; }
+        .anim-float   { animation: float 6s ease-in-out infinite; }
+        .anim-float2  { animation: float 8s ease-in-out infinite 1s; }
+        .anim-node    { animation: nodeFloat 6s ease-in-out infinite; }
+        .anim-node2   { animation: nodeFloat 5s ease-in-out infinite .9s; }
+        .anim-node3   { animation: nodeFloat 7s ease-in-out infinite 1.8s; }
+        .anim-fadein  { animation: fadeInUp .8s ease forwards; }
+        .anim-fadein2 { animation: fadeInUp .8s ease .2s forwards; opacity:0; }
+        .anim-fadein3 { animation: fadeInUp .8s ease .4s forwards; opacity:0; }
+        .anim-fadein4 { animation: fadeInUp .8s ease .6s forwards; opacity:0; }
+        .anim-scalein { animation: scaleIn .7s ease .3s forwards; opacity:0; }
+        .shimmer-text {
+          background: linear-gradient(90deg, #60a5fa 0%, #22d3ee 30%, #a78bfa 60%, #60a5fa 100%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: shimmer 4s linear infinite;
+        }
+        .hero-dot1 { width:10px; height:10px; border-radius:9999px; background:rgba(6,182,212,.65); box-shadow:0 0 14px rgba(6,182,212,.55); }
+        .hero-dot2 { width:7px;  height:7px;  border-radius:9999px; background:rgba(59,130,246,.5); box-shadow:0 0 10px rgba(59,130,246,.4); }
+        .hero-dot3 { width:7px;  height:7px;  border-radius:9999px; background:rgba(147,197,253,.4);box-shadow:0 0 8px rgba(147,197,253,.35); }
+        .card-premium {
+          background: linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+          border: 1px solid rgba(255,255,255,0.07);
+          backdrop-filter: blur(10px);
+          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .card-premium:hover {
+          background: linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%);
+          border-color: rgba(59,130,246,0.25);
+          transform: translateY(-4px);
+          box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(59,130,246,0.08);
+        }
+        .btn-primary {
+          background: linear-gradient(135deg, #2563eb, #0891b2);
+          border: 1px solid rgba(96,165,250,0.3);
+          box-shadow: 0 4px 24px rgba(37,99,235,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+          transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .btn-primary:hover {
+          background: linear-gradient(135deg, #3b82f6, #06b6d4);
+          box-shadow: 0 8px 36px rgba(37,99,235,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+          transform: translateY(-2px);
+        }
+        .btn-ghost {
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.12);
+          transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .btn-ghost:hover {
+          background: rgba(255,255,255,0.08);
+          border-color: rgba(96,165,250,0.35);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .step-line::after {
+          content:'';
+          position:absolute;
+          left:50%;
+          bottom:-24px;
+          width:1px;
+          height:24px;
+          background:linear-gradient(180deg, rgba(59,130,246,0.4), transparent);
+        }
+        .nav-pill {
+          position:relative;
+          transition: color 0.2s ease;
+        }
+        .nav-pill::after {
+          content:'';
+          position:absolute;
+          bottom:-2px;
+          left:0;
+          width:0;
+          height:1px;
+          background:linear-gradient(90deg,#3b82f6,#06b6d4);
+          transition: width 0.3s ease;
+        }
+        .nav-pill:hover::after,
+        .nav-pill[data-active='true']::after {
+          width:100%;
+        }
+        .section-divider {
+          height:1px;
+          background:linear-gradient(90deg, transparent, rgba(59,130,246,0.2), rgba(6,182,212,0.2), transparent);
+        }
+        .stat-number {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(2.5rem, 5vw, 4rem);
+          font-weight: 700;
+          line-height: 1;
+          background: linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.55));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        .hero-badge {
+          background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(8,145,178,0.15));
+          border: 1px solid rgba(59,130,246,0.25);
+          box-shadow: 0 2px 12px rgba(37,99,235,0.12), inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+        .gradient-border-card {
+          position:relative;
+          border-radius:1.25rem;
+          overflow:hidden;
+        }
+        .gradient-border-card::before {
+          content:'';
+          position:absolute;
+          inset:0;
+          padding:1px;
+          border-radius:1.25rem;
+          background:linear-gradient(135deg, rgba(59,130,246,0.3), rgba(6,182,212,0.15), rgba(139,92,246,0.2));
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          pointer-events:none;
+        }
       `}</style>
 
-      <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden bg-gradient-to-br from-[#0b1120] via-[#0f1d35] to-[#162544]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_18%,rgba(59,130,246,0.16),transparent_24%),radial-gradient(circle_at_82%_22%,rgba(6,182,212,0.14),transparent_18%),linear-gradient(135deg,rgba(15,23,42,0.18),rgba(15,23,42,0.62))]" />
-        <div className="absolute inset-y-0 right-[-12%] hidden w-[44rem] max-w-none pointer-events-none lg:block">
-          <div className="hero-sheen absolute inset-y-[18%] right-[8%] w-[68%] rounded-full bg-gradient-to-l from-cyan-300/16 via-blue-400/10 to-transparent blur-3xl" />
-        </div>
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(11,17,32,0.96)_0%,rgba(11,17,32,0.9)_44%,rgba(11,17,32,0.72)_100%)]" />
+      {/* ════════════════════════════════════════
+          HERO
+      ════════════════════════════════════════ */}
+      <section className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden" style={{ background: "linear-gradient(160deg, #060d1e 0%, #071428 40%, #08152e 70%, #050a14 100%)" }}>
 
-        {/* ── Animated grid lines ── */}
-        <svg className="absolute inset-0 w-full h-full hero-grid pointer-events-none" preserveAspectRatio="none">
+        {/* Background grid */}
+        <svg className="anim-grid absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
           <defs>
-            <linearGradient id="gridFade" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0" />
-              <stop offset="50%" stopColor="#3b82f6" stopOpacity="1" />
-              <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+            <linearGradient id="vg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0"/>
+              <stop offset="50%" stopColor="#3b82f6" stopOpacity="1"/>
+              <stop offset="100%" stopColor="#3b82f6" stopOpacity="0"/>
             </linearGradient>
           </defs>
-          {[16,32,48,64,80].map(p => (
-            <line key={`v${p}`} x1={`${p}%`} y1="0" x2={`${p}%`} y2="100%" stroke="url(#gridFade)" strokeWidth=".5" />
+          {[10,20,30,40,50,60,70,80,90].map(p => (
+            <line key={`v${p}`} x1={`${p}%`} y1="0" x2={`${p}%`} y2="100%" stroke="url(#vg)" strokeWidth=".4"/>
           ))}
-          {[20,40,60,80].map(p => (
-            <line key={`h${p}`} x1="0" y1={`${p}%`} x2="100%" y2={`${p}%`} stroke="#3b82f6" strokeWidth=".5" opacity=".04" />
+          {[15,30,45,60,75].map(p => (
+            <line key={`h${p}`} x1="0" y1={`${p}%`} x2="100%" y2={`${p}%`} stroke="#3b82f6" strokeWidth=".4" opacity=".03"/>
           ))}
         </svg>
 
-        {/* ── Accent bar (left) ── */}
-        <div className="absolute left-8 md:left-16 top-1/2 -translate-y-1/2 w-1 h-40 rounded-full bg-gradient-to-b from-blue-500 to-cyan-400 hero-accent-bar hidden md:block" />
+        {/* Ambient blobs */}
+        <div className="absolute -top-40 left-1/4 w-[600px] h-[600px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%)", filter: "blur(40px)" }} />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(6,182,212,0.09) 0%, transparent 70%)", filter: "blur(40px)" }} />
 
-        {/* ── Orbiting rings (right side) ── */}
-        <div className="absolute right-[8%] top-1/2 -translate-y-1/2 w-[360px] h-[360px] hidden lg:block">
-          <div className="absolute inset-0 rounded-full border border-blue-500/10 hero-ring" />
-          <div className="absolute inset-[50px] rounded-full border border-cyan-400/10 hero-ring-2" />
-          <div className="absolute inset-[100px] rounded-full bg-blue-500/[0.03] hero-ring-3" />
-
-          {/* Orbiting dots */}
+        {/* Orbiting rings (desktop right) */}
+        <div className="absolute right-[6%] top-1/2 -translate-y-1/2 w-[420px] h-[420px] hidden xl:block pointer-events-none">
+          <div className="anim-glow  absolute inset-0 rounded-full border border-blue-500/10"/>
+          <div className="anim-glow2 absolute inset-[60px] rounded-full border border-cyan-400/10"/>
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="hero-orbit-1"><div className="w-3 h-3 rounded-full bg-cyan-400/60 shadow-[0_0_12px_rgba(6,182,212,.5)]" /></div>
+            <div className="anim-orbit1"><div className="hero-dot1"/></div>
           </div>
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="hero-orbit-2"><div className="w-2 h-2 rounded-full bg-blue-400/50 shadow-[0_0_8px_rgba(59,130,246,.4)]" /></div>
+            <div className="anim-orbit2"><div className="hero-dot2"/></div>
           </div>
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="hero-orbit-3"><div className="w-2 h-2 rounded-full bg-blue-300/40 shadow-[0_0_6px_rgba(147,197,253,.4)]" /></div>
+            <div className="anim-orbit3"><div className="hero-dot3"/></div>
           </div>
+          {/* Center glow */}
+          <div className="absolute inset-[140px] rounded-full" style={{ background: "radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 70%)" }}/>
         </div>
 
-        {/* ── Floating network nodes ── */}
+        {/* Floating nodes */}
         <div className="absolute inset-0 pointer-events-none hidden md:block">
-          <div className="hero-node   absolute top-[18%] left-[12%] w-2 h-2 rounded-full bg-cyan-400/40 shadow-[0_0_10px_rgba(6,182,212,.3)]" />
-          <div className="hero-node-2 absolute top-[72%] left-[22%] w-1.5 h-1.5 rounded-full bg-blue-400/30 shadow-[0_0_8px_rgba(59,130,246,.3)]" />
-          <div className="hero-node-3 absolute top-[30%] right-[38%] w-2.5 h-2.5 rounded-full bg-blue-300/20 shadow-[0_0_14px_rgba(147,197,253,.25)]" />
-          <div className="hero-node-4 absolute bottom-[25%] right-[28%] w-2 h-2 rounded-full bg-cyan-300/25 shadow-[0_0_10px_rgba(103,232,249,.25)]" />
-          {/* Connecting lines */}
-          <svg className="absolute inset-0 w-full h-full" style={{opacity:.06}}>
-            <line x1="12%" y1="18%" x2="38%" y2="30%" stroke="#06b6d4" strokeWidth="1"/>
-            <line x1="22%" y1="72%" x2="62%" y2="30%" stroke="#3b82f6" strokeWidth="1"/>
-            <line x1="62%" y1="30%" x2="72%" y2="75%" stroke="#93c5fd" strokeWidth="1"/>
+          <div className="anim-node  absolute top-[20%] left-[10%] w-2 h-2 rounded-full bg-cyan-400/40 shadow-[0_0_12px_rgba(6,182,212,.35)]"/>
+          <div className="anim-node2 absolute top-[70%] left-[18%] w-1.5 h-1.5 rounded-full bg-blue-400/30 shadow-[0_0_10px_rgba(59,130,246,.3)]"/>
+          <div className="anim-node3 absolute top-[35%] right-[35%] w-2.5 h-2.5 rounded-full bg-blue-300/20 shadow-[0_0_16px_rgba(147,197,253,.25)]"/>
+          <svg className="absolute inset-0 w-full h-full" style={{ opacity: .05 }}>
+            <line x1="10%" y1="20%" x2="35%" y2="35%" stroke="#06b6d4" strokeWidth="1"/>
+            <line x1="18%" y1="70%" x2="65%" y2="35%" stroke="#3b82f6" strokeWidth="1"/>
           </svg>
         </div>
 
-        {/* ── Large ambient blurs ── */}
-        <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-blue-600/[0.07] rounded-full blur-[100px] animate-pulse" />
-        <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-cyan-500/[0.06] rounded-full blur-[80px] animate-pulse delay-1000" />
+        {/* Content */}
+        <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 w-full">
+          <div className="max-w-4xl mx-auto text-center">
 
-        {/* ── Content ── */}
-        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-6 py-10 animate-in fade-in slide-in-from-bottom-4 duration-1000 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,0.95fr)]">
-
-          <div className="text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 bg-white/[0.06] border border-white/10 text-blue-200 px-5 py-2 rounded-full text-sm font-medium mb-8 backdrop-blur-sm animate-in zoom-in-50 delay-300">
-              <Sparkles className="h-4 w-4 text-cyan-400" />
-              Mozilla Democracy & AI Incubator
+            {/* Badge */}
+            <div className="anim-fadein inline-flex items-center gap-2.5 hero-badge px-5 py-2 rounded-full text-sm font-medium text-blue-200 mb-10 cursor-default">
+              <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
+              <span>Mozilla Democracy & AI Incubator</span>
+              <span className="w-px h-3 bg-blue-400/30"/>
+              <span className="text-blue-300/70 text-xs">Open Source</span>
             </div>
 
-            <h1 className="mb-6 text-5xl sm:text-6xl md:text-7xl xl:text-8xl font-extrabold tracking-tight leading-[1.05] animate-in slide-in-from-left-4 delay-500">
-              <span className="text-white">Civic Voice</span>{" "}
-              <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-300 bg-clip-text text-transparent">AI</span>
+            {/* Headline */}
+            <h1 className="anim-fadein2 mb-7 leading-[1.02] tracking-tight" style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(3rem, 8vw, 6.5rem)", fontWeight: 700 }}>
+              <span style={{ color: "rgba(255,255,255,0.92)" }}>Civic Voice</span>
+              {" "}
+              <span className="shimmer-text">AI</span>
             </h1>
 
-            <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-300 mb-12 leading-relaxed animate-in slide-in-from-right-4 delay-700 lg:mx-0">
-              AI-assisted civic participation platform{" "}
-              <span className="text-cyan-300 font-semibold">transforming citizen input into actionable policy proposals</span>
+            {/* Sub */}
+            <p className="anim-fadein3 max-w-2xl mx-auto mb-14 leading-relaxed" style={{ color: "rgba(148,163,184,0.9)", fontSize: "clamp(1.05rem, 2vw, 1.25rem)" }}>
+              AI-assisted civic participation platform — transforming{" "}
+              <span style={{ color: "#67e8f9", fontWeight: 500 }}>citizen input into actionable policy proposals</span>{" "}
+              with full ethical oversight.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in zoom-in-95 delay-1000 lg:justify-start">
-              <Button asChild size="lg" className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-[0_4px_24px_rgba(59,130,246,.35)] hover:shadow-[0_6px_32px_rgba(59,130,246,.5)] transition-all duration-300 transform hover:scale-105 font-semibold text-base px-8">
-                <Link to="/dashboard">
-                  <BarChart3 className="mr-2 h-5 w-5" />
+            {/* CTAs */}
+            <div className="anim-fadein4 flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="btn-primary text-white font-semibold text-base px-8 h-12 rounded-xl border-0" style={{ background: "linear-gradient(135deg,#2563eb,#0891b2)", boxShadow: "0 4px 24px rgba(37,99,235,.35),inset 0 1px 0 rgba(255,255,255,.1)" }}>
+                <Link to="/dashboard" className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5" />
                   Explore Dashboard
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
-
-              <Button variant="outline" size="lg" asChild className="border border-cyan-300/30 bg-white/[0.06] text-white shadow-lg backdrop-blur-sm transition-all duration-300 transform hover:scale-105 hover:border-cyan-300/70 hover:bg-cyan-400/18 hover:text-white hover:shadow-[0_10px_30px_rgba(34,211,238,0.22)] font-semibold text-base px-8">
-                <a href="https://tally.so/r/Y5OA8q" target="_blank" rel="noopener noreferrer">
-                  <Users className="mr-2 h-5 w-5" />
+              <Button asChild size="lg" variant="outline" className="btn-ghost text-white font-semibold text-base px-8 h-12 rounded-xl" style={{ background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.12)" }}>
+                <a href="https://tally.so/r/Y5OA8q" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                  <Users className="h-5 w-5 text-cyan-300" />
                   Submit Citizen Input
-                  <Zap className="ml-2 h-4 w-4" />
+                  <Zap className="h-4 w-4 text-cyan-400" />
                 </a>
               </Button>
             </div>
 
-            <div className="mt-16 flex items-center justify-center gap-6 text-xs text-slate-500 tracking-wider uppercase animate-in fade-in delay-[1200ms] lg:justify-start">
-              <span>Common Praxis</span>
-              <span className="w-1 h-1 rounded-full bg-slate-600" />
-              <span>Open Source</span>
-              <span className="w-1 h-1 rounded-full bg-slate-600" />
-              <span>Participatory AI</span>
+            {/* Social proof dots */}
+            <div className="anim-fadein4 mt-16 flex items-center justify-center gap-8 text-xs tracking-widest uppercase" style={{ color: "rgba(100,116,139,0.7)" }}>
+              {["Common Praxis", "Open Source", "Participatory AI"].map((s, i) => (
+                <span key={i} className="flex items-center gap-3">
+                  {i !== 0 && <span className="w-1 h-1 rounded-full bg-slate-700"/>}
+                  {s}
+                </span>
+              ))}
             </div>
           </div>
 
-          <div className="relative hidden lg:block">
-            <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-tr from-cyan-400/12 via-blue-500/10 to-transparent blur-2xl" />
-            <div className="hero-artwork relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 shadow-[0_24px_80px_rgba(2,6,23,0.45)] backdrop-blur-md">
-              <div className="rounded-[1.5rem] border border-white/10 bg-[#09111f]/85 p-2">
-                <img
-                  src={heroArtworkUrl}
-                  alt="Civic Voice AI artwork"
-                  className="block w-full rounded-[1.1rem] opacity-90"
-                />
-              </div>
+          {/* Hero artwork */}
+          <div className="anim-scalein mt-20 hidden lg:block max-w-2xl mx-auto">
+            <div className="relative rounded-2xl overflow-hidden" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(59,130,246,0.1)" }}>
+              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(135deg, rgba(37,99,235,0.05) 0%, transparent 60%, rgba(6,182,212,0.04) 100%)" }}/>
+              <img src={heroArtworkUrl} alt="Civic Voice AI" className="w-full opacity-85 block rounded-2xl" />
             </div>
           </div>
+        </div>
+
+        {/* Scroll hint */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 anim-float2 opacity-30 hidden md:block">
+          <div className="w-5 h-8 rounded-full border border-slate-500 flex items-start justify-center pt-1.5">
+            <div className="w-1 h-2 rounded-full bg-slate-400" style={{ animation: "float 1.5s ease-in-out infinite" }}/>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════
+          TICKER
+      ════════════════════════════════════════ */}
+      <div className="section-divider"/>
+      <div className="overflow-hidden py-5 select-none" style={{ background: "rgba(255,255,255,0.015)", borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+        <div className="marquee-track flex items-center gap-12">
+          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+            <span key={i} className="flex items-center gap-3 whitespace-nowrap text-sm font-medium tracking-widest uppercase" style={{ color: "rgba(100,116,139,0.6)" }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50"/>
+              {item}
+            </span>
+          ))}
         </div>
       </div>
+      <div className="section-divider"/>
 
-      {/* ── Rest of page uses light theme ── */}
-      <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-
-      {/* What It Does */}
-      <section className="relative border-y border-slate-200/80 bg-white/92 py-20 px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_1px_0_rgba(148,163,184,0.08)] dark:border-slate-700/70 dark:bg-slate-950/58">
+      {/* ════════════════════════════════════════
+          WHAT IT DOES — 3 feature cards
+      ════════════════════════════════════════ */}
+      <section className="relative py-32 px-6" style={{ background: "linear-gradient(180deg, #050a14 0%, #070e1e 100%)" }}>
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-4">
-            <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
-              What This System Does
-            </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
-              This AI-powered civic participation pipeline transforms raw citizen input into structured,
-              accountable policy proposals. It takes workshop submissions or survey responses, normalizes them
-              into civic data, retrieves relevant planning context, generates multiple solution types,
-              applies ethical governance review, scores impact, and creates citizen-facing explanations.
-            </p>
+
+          {/* Section label */}
+          <div className="flex items-center gap-3 mb-5">
+            <span className="w-8 h-px" style={{ background: "linear-gradient(90deg,#3b82f6,transparent)" }}/>
+            <span className="text-xs font-semibold tracking-widest uppercase text-blue-400">Platform Overview</span>
           </div>
 
-          {/* How to Access */}
-          <Card className="mb-12 shadow-2xl border border-slate-200/70 bg-gradient-to-r from-white to-blue-50 dark:border-slate-700/70 dark:from-slate-800 dark:to-slate-700 hover:shadow-3xl transition-all duration-500 animate-in slide-in-from-left-4 delay-300">
-            <CardHeader className="pb-6">
-              <CardTitle className="flex items-center text-2xl">
-                <Webhook className="mr-3 h-6 w-6 text-blue-600" />
-                How to Access & Test the System
-              </CardTitle>
-              <CardDescription className="text-base">
-                Multiple entry points for citizen participation and system testing
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid md:grid-cols-3 gap-8">
-                <a href="https://tally.so/r/Y5OA8q" target="_blank" rel="noopener noreferrer" className="group/card block space-y-4 p-6 rounded-xl bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border border-green-200 dark:border-green-800 hover:shadow-lg hover:border-green-400 dark:hover:border-green-600 transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-                  <h4 className="font-semibold flex items-center text-lg group-hover/card:text-green-600 transition-colors">
-                    <Users className="mr-3 h-5 w-5 text-green-600" />
-                    Citizen Participation
-                    <ArrowRight className="ml-auto h-4 w-4 text-green-500 opacity-0 -translate-x-2 group-hover/card:opacity-100 group-hover/card:translate-x-0 transition-all duration-300" />
-                  </h4>
-                  <p className="text-slate-600 dark:text-slate-300">
-                    Submit real citizen input through our Tally form. This triggers the full AI pipeline
-                    and generates proposals that appear in the dashboard.
-                  </p>
-                  <span className="inline-flex items-center text-sm font-medium text-green-600 group-hover/card:underline">
-                    Open Tally Form
-                    <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                  </span>
-                </a>
-                <Link to="/process" className="group/card block space-y-4 p-6 rounded-xl bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border border-purple-200 dark:border-purple-800 hover:shadow-lg hover:border-purple-400 dark:hover:border-purple-600 transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-                  <h4 className="font-semibold flex items-center text-lg group-hover/card:text-purple-600 transition-colors">
-                    <Database className="mr-3 h-5 w-5 text-purple-600" />
-                    Webhook Integration
-                    <ArrowRight className="ml-auto h-4 w-4 text-purple-500 opacity-0 -translate-x-2 group-hover/card:opacity-100 group-hover/card:translate-x-0 transition-all duration-300" />
-                  </h4>
-                  <p className="text-slate-600 dark:text-slate-300">
-                    The system accepts webhook payloads from external forms or workshops.
-                    Configure your form to POST to the n8n webhook endpoint.
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <Badge variant="secondary" className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
-                      Production Ready
-                    </Badge>
-                    <span className="inline-flex items-center text-sm font-medium text-purple-600 group-hover/card:underline">
-                      View Process
-                      <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                    </span>
-                  </div>
-                </Link>
-                <a href="https://github.com/espaifacto-code/civic-voice-ai" target="_blank" rel="noopener noreferrer" className="group/card block space-y-4 p-6 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800/40 dark:to-slate-700/40 border border-slate-200 dark:border-slate-700 hover:shadow-lg hover:border-slate-400 dark:hover:border-slate-500 transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-                  <h4 className="font-semibold flex items-center text-lg group-hover/card:text-slate-900 dark:group-hover/card:text-white transition-colors">
-                    <Globe className="mr-3 h-5 w-5 text-slate-700 dark:text-slate-300" />
-                    GitHub Repository
-                    <ArrowRight className="ml-auto h-4 w-4 text-slate-500 opacity-0 -translate-x-2 group-hover/card:opacity-100 group-hover/card:translate-x-0 transition-all duration-300" />
-                  </h4>
-                  <p className="text-slate-600 dark:text-slate-300">
-                    Explore the source code, contribute, or fork the project. Fully open-source under
-                    the civic AI initiative.
-                  </p>
-                  <span className="inline-flex items-center text-sm font-medium text-slate-700 dark:text-slate-300 group-hover/card:underline">
-                    View on GitHub
-                    <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                  </span>
-                </a>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Architecture Overview */}
-      <section className="relative border-y border-blue-200/70 bg-gradient-to-r from-slate-200 via-sky-100 to-blue-200 py-20 px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.45),inset_0_-1px_0_rgba(148,163,184,0.12)] dark:border-slate-700/60 dark:from-slate-900 dark:via-slate-800 dark:to-slate-800">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16 animate-in fade-in">
-            <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-slate-900 to-blue-900 dark:from-white dark:to-blue-300 bg-clip-text text-transparent">
-              End-to-End Architecture
-            </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-300">
-              Seven-stage AI pipeline designed for democratic accountability
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: Webhook, title: "1. Intake & Consent", desc: "Captures citizen input via Tally forms or webhooks. Validates consent before processing.", color: "from-blue-500 to-cyan-500" },
-              { icon: FileText, title: "2. Normalization", desc: "Converts messy form responses into structured civic profiles with issues, priorities, community assets.", color: "from-green-500 to-emerald-500" },
-              { icon: Database, title: "3. Context Retrieval", desc: "Queries vector database of planning documents and policy frameworks to ground proposals.", color: "from-purple-500 to-violet-500" },
-              { icon: Lightbulb, title: "4. Proposal Generation", desc: "Creates multiple solution types and generates detailed proposal packages.", color: "from-yellow-500 to-orange-500" },
-              { icon: Shield, title: "5. Ethical Review", desc: "AI governance layer checks for bias, exclusion, accessibility issues, and social fairness.", color: "from-red-500 to-pink-500" },
-              { icon: BarChart3, title: "6. Impact Scoring", desc: "Evaluates proposals across equity, sustainability, feasibility, and community support.", color: "from-indigo-500 to-blue-500" }
-            ].map((item, index) => (
-              <Card key={index} className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-white/60 bg-white/88 dark:border-slate-700/60 dark:bg-slate-800/82 backdrop-blur-sm animate-in slide-in-from-bottom-4" style={{ animationDelay: `${index * 100}ms` }}>
-                <CardHeader className="pb-4">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${item.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <item.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <CardTitle className="text-lg group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    {item.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-                    {item.desc}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-
-            <Card className="md:col-span-2 lg:col-span-3 group hover:shadow-2xl transition-all duration-500 border border-blue-200/60 bg-gradient-to-r from-blue-50 to-indigo-50 dark:border-slate-700/60 dark:from-blue-900/20 dark:to-indigo-900/20 animate-in slide-in-from-bottom-4 delay-700">
-              <CardHeader className="pb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <CheckCircle className="h-6 w-6 text-white" />
-                </div>
-                <CardTitle className="text-xl group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                  7. Storage & Transparency
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                  Stores results in Supabase for dashboard display. Creates citizen-facing explanations
-                  and supports public oversight, audits, and comparative analysis.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Dashboard Features */}
-      <section className="relative border-y border-slate-200/80 bg-white py-20 px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_1px_0_rgba(148,163,184,0.08)] dark:border-slate-700/70 dark:bg-slate-950/64">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16 animate-in fade-in">
-            <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
-              Dashboard & Explorer
-            </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-300">
-              Public transparency interface for civic AI outputs
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            <Card className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-blue-200/60 bg-gradient-to-br from-blue-50 to-indigo-50 dark:border-slate-700/60 dark:from-blue-900/20 dark:to-indigo-900/20 animate-in slide-in-from-left-4 delay-300">
-              <CardHeader>
-                <CardTitle className="flex items-center text-xl group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                  <BarChart3 className="mr-3 h-6 w-6" />
-                  Participatory Civic AI Dashboard
-                </CardTitle>
-                <CardDescription className="text-base">
-                  Real-time metrics and analytics from citizen participation
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300">
-                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Total citizen submissions and approval rates</li>
-                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Average social impact and feasibility scores</li>
-                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Civic issues frequency analysis</li>
-                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Ethical governance overview charts</li>
-                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Impact radar charts across key dimensions</li>
-                </ul>
-                <Button className="mt-6 w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-300" asChild>
-                  <Link to="/dashboard">View Dashboard</Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-purple-200/60 bg-gradient-to-br from-purple-50 to-pink-50 dark:border-slate-700/60 dark:from-purple-900/20 dark:to-pink-900/20 animate-in slide-in-from-right-4 delay-500">
-              <CardHeader>
-                <CardTitle className="flex items-center text-xl group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                  <Globe className="mr-3 h-6 w-6" />
-                  Proposal Explorer
-                </CardTitle>
-                <CardDescription className="text-base">
-                  Detailed inspection of generated civic proposals
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300">
-                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Individual proposal details and metadata</li>
-                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Ethical review outcomes and revision history</li>
-                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Impact scores and citizen explanations</li>
-                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Technical context and retrieved documents</li>
-                  <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Stakeholder analysis and implementation steps</li>
-                </ul>
-                <Button className="mt-6 w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 transition-all duration-300" variant="outline" asChild>
-                  <Link to="/explorer">Explore Proposals</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Mozilla Alignment */}
-      <section className="relative border-y border-indigo-200/70 bg-gradient-to-r from-indigo-100 via-white to-cyan-100 py-20 px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(129,140,248,0.08)] dark:border-slate-700/60 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-8 bg-gradient-to-r from-indigo-900 to-purple-900 dark:from-indigo-200 dark:to-purple-200 bg-clip-text text-transparent animate-in fade-in">
-            Mozilla Democracy & AI Alignment
+          <h2 className="mb-6 tracking-tight" style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 700, color: "rgba(255,255,255,0.92)", lineHeight: 1.1 }}>
+            What this system does
           </h2>
-          <p className="text-lg text-slate-600 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
-            This system embodies Mozilla's principles of participatory, accountable,
-            transparent, and socially grounded AI.
+          <p className="mb-16 max-w-2xl" style={{ color: "rgba(148,163,184,0.75)", fontSize: "1.1rem", lineHeight: 1.75 }}>
+            A seven-stage AI pipeline that transforms raw citizen input into structured,
+            accountable policy proposals — designed for democratic accountability.
           </p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { icon: Users, title: "Citizen-Centered", desc: "Begins with real participation, not institutional data", color: "from-blue-500 to-blue-600" },
-              { icon: Lightbulb, title: "Plural Solutions", desc: "Generates multiple pathways instead of single answers", color: "from-yellow-500 to-orange-500" },
-              { icon: Shield, title: "Ethical Governance", desc: "Built-in AI accountability and bias detection", color: "from-red-500 to-red-600" },
-              { icon: BarChart3, title: "Public Transparency", desc: "All outputs auditable and explainable", color: "from-green-500 to-green-600" }
-            ].map((item, index) => (
-              <div key={index} className="group rounded-2xl border border-white/70 bg-white/88 p-6 shadow-lg transition-all duration-500 transform hover:-translate-y-2 hover:shadow-2xl dark:border-slate-700/60 dark:bg-slate-800/80 animate-in zoom-in-95" style={{ animationDelay: `${index * 200}ms` }}>
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${item.color} flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                  <item.icon className="h-8 w-8 text-white" />
+          {/* Bento grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            {/* Main card — full width on mobile, 2 cols on md */}
+            <a href="https://tally.so/r/Y5OA8q" target="_blank" rel="noopener noreferrer"
+               className="md:col-span-2 group card-premium gradient-border-card p-8 rounded-2xl block cursor-pointer">
+              <div className="flex items-start justify-between mb-6">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,rgba(16,185,129,0.2),rgba(6,182,212,0.15))", border: "1px solid rgba(16,185,129,0.2)" }}>
+                  <Users className="h-6 w-6 text-emerald-400" />
                 </div>
-                <h3 className="font-bold text-lg mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{item.title}</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">{item.desc}</p>
+                <ArrowRight className="h-5 w-5 text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-300" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Citizen Participation</h3>
+              <p style={{ color: "rgba(148,163,184,0.7)", lineHeight: 1.7 }}>
+                Submit real citizen input through our Tally form. This triggers the full AI pipeline
+                and generates proposals that appear in the dashboard — fully end-to-end.
+              </p>
+              <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-emerald-400">
+                Open Tally Form <ChevronRight className="h-4 w-4" />
+              </div>
+            </a>
+
+            {/* Webhook card */}
+            <Link to="/process" className="group card-premium gradient-border-card p-8 rounded-2xl block cursor-pointer">
+              <div className="flex items-start justify-between mb-6">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,rgba(139,92,246,0.2),rgba(59,130,246,0.15))", border: "1px solid rgba(139,92,246,0.2)" }}>
+                  <Webhook className="h-6 w-6 text-violet-400" />
+                </div>
+                <ArrowRight className="h-5 w-5 text-slate-600 group-hover:text-violet-400 group-hover:translate-x-1 transition-all duration-300" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Webhook Integration</h3>
+              <p style={{ color: "rgba(148,163,184,0.7)", lineHeight: 1.7 }}>
+                Accepts webhook payloads from external forms or workshops. Configure your form
+                to POST to the n8n endpoint.
+              </p>
+              <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-violet-400">
+                View Process <ChevronRight className="h-4 w-4" />
+              </div>
+            </Link>
+
+            {/* GitHub card */}
+            <a href="https://github.com/espaifacto-code/civic-voice-ai" target="_blank" rel="noopener noreferrer"
+               className="group card-premium gradient-border-card p-8 rounded-2xl block cursor-pointer">
+              <div className="flex items-start justify-between mb-6">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,rgba(100,116,139,0.2),rgba(71,85,105,0.15))", border: "1px solid rgba(100,116,139,0.2)" }}>
+                  <Globe className="h-6 w-6 text-slate-300" />
+                </div>
+                <ArrowRight className="h-5 w-5 text-slate-600 group-hover:text-slate-300 group-hover:translate-x-1 transition-all duration-300" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>GitHub Repository</h3>
+              <p style={{ color: "rgba(148,163,184,0.7)", lineHeight: 1.7 }}>
+                Fully open-source under the civic AI initiative. Explore, fork, or contribute.
+              </p>
+              <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-slate-300">
+                View on GitHub <ChevronRight className="h-4 w-4" />
+              </div>
+            </a>
+
+            {/* Dashboard card */}
+            <Link to="/dashboard" className="md:col-span-2 group card-premium gradient-border-card p-8 rounded-2xl block cursor-pointer">
+              <div className="flex items-start justify-between mb-6">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,rgba(59,130,246,0.2),rgba(6,182,212,0.15))", border: "1px solid rgba(59,130,246,0.2)" }}>
+                  <BarChart3 className="h-6 w-6 text-blue-400" />
+                </div>
+                <ArrowRight className="h-5 w-5 text-slate-600 group-hover:text-blue-400 group-hover:translate-x-1 transition-all duration-300" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Live Analytics Dashboard</h3>
+              <p style={{ color: "rgba(148,163,184,0.7)", lineHeight: 1.7 }}>
+                Real-time metrics and analytics from citizen participation — total submissions, approval rates,
+                impact scores, ethical governance charts, and radar analytics across all civic proposals.
+              </p>
+              <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-blue-400">
+                Open Dashboard <ChevronRight className="h-4 w-4" />
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <div className="section-divider"/>
+
+      {/* ════════════════════════════════════════
+          STATS ROW
+      ════════════════════════════════════════ */}
+      <section className="py-24 px-6" style={{ background: "linear-gradient(180deg,#070e1e 0%,#080f20 100%)" }}>
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+          {[
+            { num: "7",    label: "Pipeline Stages",      sub: "end-to-end AI" },
+            { num: "100%", label: "Open Source",           sub: "MIT licensed" },
+            { num: "RAG",  label: "Grounded Proposals",   sub: "real policy docs" },
+            { num: "≤15s", label: "Data Refresh",          sub: "real-time sync" },
+          ].map(({ num, label, sub }) => (
+            <div key={label} className="text-center">
+              <div className="stat-number mb-1">{num}</div>
+              <div className="text-sm font-semibold text-white/70 mb-0.5">{label}</div>
+              <div className="text-xs text-slate-500 tracking-wide">{sub}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="section-divider"/>
+
+      {/* ════════════════════════════════════════
+          ARCHITECTURE — numbered steps
+      ════════════════════════════════════════ */}
+      <section className="relative py-32 px-6 overflow-hidden" style={{ background: "linear-gradient(160deg,#060c1c 0%,#07101e 60%,#050a14 100%)" }}>
+
+        {/* Ambient */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)", filter: "blur(60px)" }}/>
+
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center gap-3 mb-5">
+            <span className="w-8 h-px" style={{ background: "linear-gradient(90deg,#8b5cf6,transparent)" }}/>
+            <span className="text-xs font-semibold tracking-widest uppercase text-violet-400">Architecture</span>
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6">
+            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 700, color: "rgba(255,255,255,0.92)", lineHeight: 1.1 }}>
+              End-to-end pipeline<br/>
+              <span className="shimmer-text">built for democracy</span>
+            </h2>
+            <p className="max-w-xs md:text-right" style={{ color: "rgba(100,116,139,0.8)", fontSize: ".95rem", lineHeight: 1.7 }}>
+              Seven stages of processing with ethical governance at every step.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {ARCH_STEPS.map(({ num, icon: Icon, color, title, desc }, idx) => (
+              <div key={num} className="card-premium rounded-2xl p-7 group relative overflow-hidden">
+                {/* Step num background */}
+                <div className="absolute top-3 right-4 text-6xl font-bold opacity-[0.04] select-none" style={{ fontFamily: "'Space Grotesk',sans-serif", color }}>
+                  {num}
+                </div>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-5" style={{ background: `${color}18`, border: `1px solid ${color}30` }}>
+                  <Icon className="h-5 w-5" style={{ color }} />
+                </div>
+                <div className="text-xs font-bold tracking-widest uppercase mb-2" style={{ color: `${color}90` }}>{num}</div>
+                <h3 className="text-sm font-semibold text-white mb-2 leading-snug" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>{title}</h3>
+                <p className="text-xs leading-relaxed" style={{ color: "rgba(100,116,139,0.8)" }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 text-center">
+            <Link to="/process" className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-blue-400 transition-colors">
+              See full process diagram <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <div className="section-divider"/>
+
+      {/* ════════════════════════════════════════
+          PRINCIPLES (Mozilla alignment)
+      ════════════════════════════════════════ */}
+      <section className="py-32 px-6" style={{ background: "linear-gradient(180deg,#050a14 0%,#060c1c 100%)" }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-center gap-3 mb-5">
+            <span className="w-8 h-px" style={{ background: "linear-gradient(90deg,#06b6d4,transparent)" }}/>
+            <span className="text-xs font-semibold tracking-widest uppercase text-cyan-400">Principles</span>
+          </div>
+
+          <div className="mb-16">
+            <h2 className="mb-4" style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 700, color: "rgba(255,255,255,0.92)", lineHeight: 1.1 }}>
+              Mozilla Democracy & AI<br/>Alignment
+            </h2>
+            <p style={{ color: "rgba(148,163,184,0.7)", fontSize: "1.05rem" }}>
+              Built on Mozilla's principles of participatory, accountable, transparent, and socially grounded AI.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {PRINCIPLES.map(({ icon: Icon, title, desc, accent }) => (
+              <div key={title} className="card-premium rounded-2xl p-8 group text-center">
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform duration-300 group-hover:scale-110" style={{ background: `${accent}18`, border: `1px solid ${accent}28` }}>
+                  <Icon className="h-7 w-7" style={{ color: accent }} />
+                </div>
+                <h3 className="font-semibold text-white mb-2" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>{title}</h3>
+                <p className="text-sm" style={{ color: "rgba(100,116,139,0.8)", lineHeight: 1.65 }}>{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative py-12 px-4 bg-gradient-to-r from-slate-900 to-slate-800 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="mb-3 text-lg font-medium">Prototype built for Mozilla Democracy & AI Incubator</p>
-          <p className="text-slate-300">Open-source civic participation infrastructure</p>
-          <div className="mt-6 flex justify-center space-x-6">
-            <div className="flex items-center text-sm text-slate-400">
-              <Sparkles className="h-4 w-4 mr-2" />
-              Powered by AI for Democracy
+      <div className="section-divider"/>
+
+      {/* ════════════════════════════════════════
+          CTA BANNER
+      ════════════════════════════════════════ */}
+      <section className="py-32 px-6 relative overflow-hidden" style={{ background: "linear-gradient(135deg,#060d1e 0%,#071428 50%,#08152e 100%)" }}>
+        {/* Glow */}
+        <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+          <div style={{ width: "700px", height: "400px", background: "radial-gradient(ellipse, rgba(37,99,235,0.12) 0%, transparent 70%)", filter: "blur(40px)" }}/>
+        </div>
+
+        <div className="max-w-3xl mx-auto text-center relative z-10">
+          <div className="inline-flex items-center gap-2 hero-badge px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase text-blue-300 mb-8">
+            <CheckCircle className="h-3.5 w-3.5" />
+            Ready to explore
+          </div>
+          <h2 className="mb-6" style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 700, color: "rgba(255,255,255,0.92)", lineHeight: 1.1 }}>
+            Shape the future of<br/>
+            <span className="shimmer-text">civic participation</span>
+          </h2>
+          <p className="mb-12 mx-auto" style={{ color: "rgba(148,163,184,0.7)", fontSize: "1.1rem", lineHeight: 1.75, maxWidth: "500px" }}>
+            Join Mozilla's civic AI incubator. Your voice, your community, your proposals — powered by transparent AI.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button asChild size="lg" className="font-semibold text-base px-8 h-12 rounded-xl border-0 text-white" style={{ background: "linear-gradient(135deg,#2563eb,#0891b2)", boxShadow: "0 4px 24px rgba(37,99,235,.35)" }}>
+              <Link to="/dashboard" className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5" />
+                View Live Dashboard
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="font-semibold text-base px-8 h-12 rounded-xl text-white" style={{ background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.12)" }}>
+              <Link to="/transparency" className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-cyan-400" />
+                Read AI Transparency Report
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════
+          FOOTER
+      ════════════════════════════════════════ */}
+      <footer className="py-12 px-6" style={{ background: "#030710", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white" style={{ background: "linear-gradient(135deg,#2563eb,#0891b2)" }}>
+              CA
             </div>
+            <span className="font-semibold text-white/70" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Civic Voice AI</span>
+          </div>
+          <p className="text-sm text-center" style={{ color: "rgba(100,116,139,0.6)" }}>
+            Prototype built for Mozilla Democracy & AI Incubator · Open-source civic participation infrastructure
+          </p>
+          <div className="flex items-center gap-2 text-xs text-slate-600">
+            <Sparkles className="h-3.5 w-3.5" />
+            Powered by AI for Democracy
           </div>
         </div>
       </footer>
-      </div>
     </div>
   );
-};
-
-export default Index;
+}
