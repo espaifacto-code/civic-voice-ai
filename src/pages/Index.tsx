@@ -12,13 +12,13 @@ const TICKER_ITEMS = [
   "Participatory AI",
   "Open Source",
   "Democratic Accountability",
-  "Mozilla Incubator",
+  "Canodrom Workshop",
   "Citizen-Centered",
   "Ethical Governance",
   "RAG Pipeline",
   "Civic Innovation",
   "Transparent AI",
-  "Common Praxis",
+  "Barcelona",
 ];
 
 const ARCH_STEPS = [
@@ -246,16 +246,16 @@ export default function Index() {
             {/* Badge */}
             <div className="anim-fadein inline-flex items-center gap-2.5 hero-badge px-5 py-2 rounded-full text-sm font-medium text-blue-200 mb-10 cursor-default">
               <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
-              <span>Mozilla Democracy & AI Incubator</span>
+              <span>Workshop Canodrom</span>
               <span className="w-px h-3 bg-blue-400/30"/>
               <span className="text-blue-300/70 text-xs">Open Source</span>
             </div>
 
             {/* Headline */}
             <h1 className="anim-fadein2 mb-7 leading-[1.02] tracking-tight" style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(3rem, 8vw, 6.5rem)", fontWeight: 700 }}>
-              <span style={{ color: "rgba(255,255,255,0.92)" }}>Civic Voice</span>
+              <span style={{ color: "rgba(255,255,255,0.92)" }}>Workshop</span>
               {" "}
-              <span className="shimmer-text">AI</span>
+              <span className="shimmer-text">Canodrom</span>
             </h1>
 
             {/* Sub */}
@@ -275,7 +275,7 @@ export default function Index() {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="btn-ghost text-white font-semibold text-base px-8 h-12 rounded-xl" style={{ background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.12)" }}>
-                <a href="https://tally.so/r/Y5OA8q" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                <a href="https://tally.so/r/9qpyWG" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                   <Users className="h-5 w-5 text-cyan-300" />
                   Submit Citizen Input
                   <Zap className="h-4 w-4 text-cyan-400" />
@@ -285,7 +285,7 @@ export default function Index() {
 
             {/* Social proof dots */}
             <div className="anim-fadein4 mt-16 flex items-center justify-center gap-8 text-xs tracking-widest uppercase" style={{ color: "rgba(100,116,139,0.7)" }}>
-              {["Common Praxis", "Open Source", "Participatory AI"].map((s, i) => (
+              {["Canodrom", "Open Source", "Participatory AI"].map((s, i) => (
                 <span key={i} className="flex items-center gap-3">
                   {i !== 0 && <span className="w-1 h-1 rounded-full bg-slate-700"/>}
                   {s}
@@ -351,7 +351,7 @@ export default function Index() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
             {/* Main card — full width on mobile, 2 cols on md */}
-            <a href="https://tally.so/r/Y5OA8q" target="_blank" rel="noopener noreferrer"
+            <a href="https://tally.so/r/9qpyWG" target="_blank" rel="noopener noreferrer"
                className="md:col-span-2 group card-premium gradient-border-card p-8 rounded-2xl block cursor-pointer">
               <div className="flex items-start justify-between mb-6">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,rgba(16,185,129,0.2),rgba(6,182,212,0.15))", border: "1px solid rgba(16,185,129,0.2)" }}>
@@ -513,10 +513,10 @@ export default function Index() {
 
           <div className="mb-16">
             <h2 className="mb-4" style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 700, color: "rgba(255,255,255,0.92)", lineHeight: 1.1 }}>
-              Mozilla Democracy & AI<br/>Alignment
+              Canodrom Workshop<br/>Principles
             </h2>
             <p style={{ color: "rgba(148,163,184,0.7)", fontSize: "1.05rem" }}>
-              Built on Mozilla's principles of participatory, accountable, transparent, and socially grounded AI.
+              Built on participatory, accountable, transparent, and socially grounded AI — co-designed at Canodrom.
             </p>
           </div>
 
@@ -555,7 +555,7 @@ export default function Index() {
             <span className="shimmer-text">civic participation</span>
           </h2>
           <p className="mb-12 mx-auto" style={{ color: "rgba(148,163,184,0.7)", fontSize: "1.1rem", lineHeight: 1.75, maxWidth: "500px" }}>
-            Join Mozilla's civic AI incubator. Your voice, your community, your proposals — powered by transparent AI.
+            Join the Canodrom workshop. Your voice, your community, your proposals — powered by transparent AI.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" className="font-semibold text-base px-8 h-12 rounded-xl border-0 text-white" style={{ background: "linear-gradient(135deg,#2563eb,#0891b2)", boxShadow: "0 4px 24px rgba(37,99,235,.35)" }}>
@@ -587,7 +587,7 @@ export default function Index() {
             <span className="font-semibold text-white/70" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Civic Voice AI</span>
           </div>
           <p className="text-sm text-center" style={{ color: "rgba(100,116,139,0.6)" }}>
-            Prototype built for Mozilla Democracy & AI Incubator · Open-source civic participation infrastructure
+            Workshop Canodrom · Open-source civic participation infrastructure
           </p>
           <div className="flex items-center gap-2 text-xs text-slate-600">
             <Sparkles className="h-3.5 w-3.5" />

@@ -56,17 +56,17 @@ export default function Navbar() {
         <Link
           to="/"
           className="flex items-center gap-2.5 font-semibold tracking-tight"
-          aria-label="Civic Voice AI — homepage"
+          aria-label="Workshop Canodrom — homepage"
           style={{ color: isHome ? "rgba(255,255,255,0.9)" : undefined, fontFamily: "'Space Grotesk', sans-serif" }}
         >
           <div
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
             style={{ background: "linear-gradient(135deg,#2563eb,#0891b2)", boxShadow: "0 2px 12px rgba(37,99,235,0.4)" }}
           >
-            CA
+            WC
           </div>
           <span className="hidden sm:inline" style={{ fontSize: ".9rem", letterSpacing: "-.01em" }}>
-            Civic Voice AI
+            Workshop Canodrom
           </span>
         </Link>
 
@@ -97,7 +97,7 @@ export default function Navbar() {
         {/* CTA + hamburger */}
         <div className="flex items-center gap-2">
           <a
-            href="https://tally.so/r/Y5OA8q"
+            href="https://tally.so/r/9qpyWG"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden md:inline-flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-sm font-semibold text-white transition-all duration-200 hover:opacity-90"
@@ -151,7 +151,7 @@ export default function Navbar() {
               );
             })}
             <a
-              href="https://tally.so/r/Y5OA8q"
+              href="https://tally.so/r/9qpyWG"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}
